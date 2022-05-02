@@ -1,3 +1,6 @@
 gecgelcem 02.05.2022
 me425 spring2022 prj
-Your input: 7
+
+Input:
+~~~~~~
+[-] n = 4    
