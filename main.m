@@ -8,3 +8,5 @@ clc();
 file = printer('Output.txt');
 file.print("gecgelcem 02.05.2022");
 file.print("me425 spring2022 prj");
+
+file.print("Your input: %.0f", ask("Give a digit: ", 0, 9));
