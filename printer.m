@@ -16,8 +16,22 @@ function print(self, varargin)
     fprintf(self.file, '%s\n', message);
     fprintf('%s\n', message);
 end
+function prmat(self, name, matrix, element)
+    self.print("%s [%.0f, %.0f]: ", name, size(matrix, 1), size(matrix, 2));
+    for k = 1 : size(matrix, 1)
+        for j = 1 : size(matrix, 2)
+            self.put(element, matrix(k, j));
+        end
+        self.put("\n");
+    end
+end
 end
 methods (Access = private)
+function put(self, varargin)
+    message = sprintf(varargin{:});
+    fprintf(self.file, message);
+    fprintf(message);
+end
 function delete(self)
     if fclose(self.file) ~= 0
         fprintf(2, "Error while closing the file\n");

@@ -21,19 +21,11 @@ file.print("[-] %1s = %1.0f %0s", "n", n, "");
 I = 100/n;
 % Torsional Stiffness Between Disks
 k = 25*n;
-
-file.print("");
-file.print("Initial Caclculations:");
-file.print("~~~~~~~~~~~~~~~~~~~~~~");
-file.print("[-] %1s = %5.3f %0s", "I", I, "");
-file.print("[-] %1s = %5.3f %0s", "k", k, "");
-
 % Inertia Matrix
 M = zeros(n, n);
 for j = 1:n
     M(j, j) = I;
 end
-
 % Stiffness Matrix
 K = zeros(n, n);
 for j = 1:n
@@ -49,6 +41,14 @@ for j = 1:n
         K(j, j+1) = -k;
     end
 end
+
+file.print("");
+file.print("Initial Caclculations:");
+file.print("~~~~~~~~~~~~~~~~~~~~~~");
+file.print("[-] %1s = %5.3f %0s", "I", I, "");
+file.print("[-] %1s = %5.3f %0s", "k", k, "");
+file.prmat("[-] M", M, "%5.0f");
+file.prmat("[-] K", K, "%5.0f");
 
 % First Transformation
 M_ = M^(-1/2);
@@ -66,6 +66,8 @@ end
 file.print("");
 file.print("Part A:");
 file.print("~~~~~~~");
+file.prmat("[-] M_", M_, "%5.1f");
+file.prmat("[-] K_", K_, "%5.1f");
 
 for j = 1:n
     file.print("[*] w_%1.0f = %5.3f %5s", j, w(j), "rad/s");
