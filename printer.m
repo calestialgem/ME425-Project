@@ -25,6 +25,13 @@ function prmat(self, name, matrix, element)
         self.put("\n");
     end
 end
+function prvec(self, name, vector, element)
+    self.put("%s [%.0f]: ", name, length(vector));
+    for k = 1 : length(vector)
+        self.put(element, vector(k));
+    end
+    self.put("\n");
+end
 end
 methods (Access = private)
 function put(self, varargin)

@@ -71,4 +71,5 @@ file.prmat("[-] K_", K_, "%5.1f");
 
 for j = 1:n
     file.print("[*] w_%1.0f = %5.3f %5s", j, w(j), "rad/s");
+    file.prvec(sprintf("[*] v_%1.0f", j), P(j, :), "%5.1f");
 end
