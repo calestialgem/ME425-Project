@@ -88,14 +88,14 @@ end
 F = zeros(n, 1);
 F(1) = k;
 
-w_range = max(w)*(0:0.01:1.5);
+w_range = max(w)*(0:0.001:1.5);
 T_n_range = zeros(size(w_range));
-for k = 1:length(w_range)
-    % Base Excitation
-    w = w_range(k);
+for j = 1:length(w_range)
+    % Base Excitation Frequency
+    w = w_range(j);
     % Angular Displacement Vector (Divided by exp(iwt))
     T_ = F'/(K-w^2*M);
-    T_n_range(k) = T_(n);
+    T_n_range(j) = T_(n);
 end
 
 figure();
@@ -103,9 +103,9 @@ set(gca, 'YScale', 'log');
 set(gca, 'XScale', 'log');
 hold('on');
 grid('on');
-xlabel('p');
-ylabel('k');
-plot(w_range, T_n_range, 'LineWidth', 2);
+xlabel('\omega');
+ylabel('|\Theta_n/\Phi|');
+plot(w_range, abs(T_n_range), 'LineWidth', 2);
 saveas(gcf, 'Transmissibility', 'jpeg');
 
 % PART C ----------------------------------------------------------------------
