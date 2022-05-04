@@ -91,7 +91,7 @@ P_ = 1;
 F = zeros(n, 1);
 F(1) = k*P_;
 
-w_e_range = max(w)*(0:0.001:1.5);
+w_e_range = max(w)*(0:1.5e-3:1.5);
 T_n_range = zeros(size(w_e_range));
 for j = 1:length(w_e_range)
     % Base Excitation Frequency
