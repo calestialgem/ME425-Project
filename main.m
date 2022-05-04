@@ -29,16 +29,14 @@ end
 % Stiffness Matrix
 K = zeros(n, n);
 for j = 1:n
-    if j > 1 && j < n
-        K(j, j) = 2*k;
-    else
-        K(j, j) = k;
-    end
     if j > 1
         K(j, j-1) = -k;
     end
     if j < n
         K(j, j+1) = -k;
+        K(j, j) = 2*k;
+    else
+        K(j, j) = k;
     end
 end
 
