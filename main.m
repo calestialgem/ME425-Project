@@ -10,12 +10,20 @@ file.print("gecgelcem 02.05.2022");
 file.print("me425 spring2022 prj");
 
 % Number of Disks
-n = ask(sprintf("\nEnter %1s in [%1.0f, %1.0f] %0s: ", "n", 2, 5, ""), 2, 5);
+n_min = 2;
+n_max = 5;
+n = round(ask(sprintf("\nEnter %1s in [%1.0f, %1.0f] %0s: ", "n", n_min, n_max, ""), n_min, n_max));
+
+% Total Houdaille Damper Viscosity
+u_min = 0.1;
+u_max = 0.3;
+u = ask(sprintf("\nEnter %1s in [%3.1f, %3.1f] %0s: ", "u", u_min, u_max, ""), u_min, u_max);
 
 file.print("");
 file.print("Input:");
 file.print("~~~~~~");
-file.print("[-] %1s = %1.0f %0s", "n", n, "");
+file.print("[-] %1s = %4.0f %0s", "n", n, "");
+file.print("[-] %1s = %4.2f %0s", "u", u, "");
 
 % Rotational Inertia of a Disk
 I = 100/n;
@@ -43,10 +51,12 @@ end
 file.print("");
 file.print("Initial Caclculations:");
 file.print("~~~~~~~~~~~~~~~~~~~~~~");
-file.print("[-] %1s = %5.3f %0s", "I", I, "");
-file.print("[-] %1s = %5.3f %0s", "k", k, "");
+file.print("[-] %1s = %5.1f %0s", "I", I, "");
+file.print("[-] %1s = %5.1f %0s", "k", k, "");
 file.prmat("[-] M", M, "%5.0f");
 file.prmat("[-] K", K, "%5.0f");
+
+% PART A ----------------------------------------------------------------------
 
 % First Transformation
 M_ = M^(-1/2);
@@ -71,3 +81,12 @@ for j = 1:n
     file.print("[*] w_%1.0f = %5.3f %5s", j, w(j), "rad/s");
     file.prvec(sprintf("[*] v_%1.0f", j), P(j, :), "%5.1f");
 end
+
+% PART C ----------------------------------------------------------------------
+
+Ia = u/2;
+
+file.print("");
+file.print("Part C:");
+file.print("~~~~~~~");
+file.print("[-] %2s = %5.3f %0s", "Ia", Ia, "");
