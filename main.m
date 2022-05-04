@@ -86,7 +86,7 @@ end
 
 % Force Vector (Divided by exp(iwt))
 F = zeros(n, 1);
-F(1) = 1;
+F(1) = k;
 
 w_range = max(w)*(0:0.01:1.5);
 T_n_range = zeros(size(w_range));
