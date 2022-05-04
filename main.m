@@ -84,17 +84,20 @@ end
 
 % PART B ----------------------------------------------------------------------
 
+% Base Excitation (Divided by exp(iwt))
+P_ = 1;
+
 % Force Vector (Divided by exp(iwt))
 F = zeros(n, 1);
-F(1) = k;
+F(1) = k*P_;
 
-w_range = max(w)*(0:0.001:1.5);
-T_n_range = zeros(size(w_range));
-for j = 1:length(w_range)
+w_e_range = max(w)*(0:0.001:1.5);
+T_n_range = zeros(size(w_e_range));
+for j = 1:length(w_e_range)
     % Base Excitation Frequency
-    w = w_range(j);
+    w_e = w_e_range(j);
     % Angular Displacement Vector (Divided by exp(iwt))
-    T_ = F'/(K-w^2*M);
+    T_ = F'/(K-w_e^2*M);
     T_n_range(j) = T_(n);
 end
 
@@ -105,8 +108,18 @@ hold('on');
 grid('on');
 xlabel('\omega');
 ylabel('|\Theta_n/\Phi|');
-plot(w_range, abs(T_n_range), 'LineWidth', 2);
+plot(w_e_range, abs(T_n_range), 'LineWidth', 2);
+for j = 1:n
+    xline(w(j), '--');
+end
 saveas(gcf, 'Transmissibility', 'jpeg');
+
+file.print("");
+file.print("Part B:");
+file.print("~~~~~~~");
+file.print("[-] %2s = %5.3f %0s", "P_", P_, "");
+file.prvec("[-] F", F, "%5.1f");
+file.prmat("[-] F/T_", (K-max(w)^2*M), "%7.1f");
 
 % PART C ----------------------------------------------------------------------
 
