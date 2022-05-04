@@ -82,6 +82,32 @@ for j = 1:n
     file.prvec(sprintf("[*] v_%1.0f", j), P(j, :), "%5.1f");
 end
 
+% PART B ----------------------------------------------------------------------
+
+% Force Vector (Divided by exp(iwt))
+F = zeros(n, 1);
+F(1) = 1;
+
+w_range = max(w)*(0:0.01:1.5);
+T_n_range = zeros(size(w_range));
+for k = 1:length(w_range)
+    % Base Excitation
+    w = w_range(k);
+    % Angular Displacement Vector (Divided by exp(iwt))
+    T_ = F'/(K-w^2*M);
+    T_n_range(k) = T_(n);
+end
+
+figure();
+set(gca, 'YScale', 'log');
+set(gca, 'XScale', 'log');
+hold('on');
+grid('on');
+xlabel('p');
+ylabel('k');
+plot(w_range, T_n_range, 'LineWidth', 2);
+saveas(gcf, 'Transmissibility', 'jpeg');
+
 % PART C ----------------------------------------------------------------------
 
 Ia = u/2;
