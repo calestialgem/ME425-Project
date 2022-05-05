@@ -180,8 +180,10 @@ f = P'*M_*F;
 w_e_range = max(w)*(0:1.5e-3:1.5);
 % Optimization Parameter Vector
 % [ca1, ca2]
-x0 = [1, 1];
-x = fminimax(@(x) f_T_max(n, m, na, [x(1); x(2)], M, K, w_e_range, w, f, S, P_), x0);
+x0 = [40, 10];
+xlb = [1, 1];
+xub = [100, 100];
+x = fminimax(@(x) f_T_max(n, m, na, [x(1); x(2)], M, K, w_e_range, w, f, S, P_), x0, [], [], [], [], xlb, xub);
 % Absorber Dampings
 ca = [x(1); x(2)];
 % Damping Matrix
@@ -225,7 +227,7 @@ function T_max = f_T_max(n, m, na, ca, M, K, w_e_range, w, f, S, P_)
         % Normalized Excitation Frequencies
         r = w_e./w;
         % Modal Displacement Vector (Divided by exp(iwt))
-        R = (f./w.^2)./(((1-r.^2)./(2.*z.*r)).^2-1).^(1/2);
+        R = (f./w.^2)./(((1-r.^2)./(2.*z.*r)).^2+1).^(1/2);
         % Displacement Vector (Divided by exp(iwt))
         T_ = S*R;
         if T_n_max < T_(n)
