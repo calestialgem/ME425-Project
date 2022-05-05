@@ -181,9 +181,10 @@ w_e_range = max(w)*(0:1.5e-3:1.5);
 % Optimization Parameter Vector
 % [ca1, ca2]
 x0 = [40, 10];
-xlb = [1, 1];
-xub = [100, 100];
-x = fminimax(@(x) f_T_max(n, m, na, [x(1); x(2)], M, K, w_e_range, w, f, S, P_), x0, [], [], [], [], xlb, xub);
+[x, ~, flag] = fminsearch(@(x) f_T_max(n, m, na, [x(1); x(2)], M, K, w_e_range, w, f, S, P_), x0);
+if flag ~= 1
+    error("Absorber Dampings Not Found! Flag: %.0f", flag);
+end
 % Absorber Dampings
 ca = [x(1); x(2)];
 % Damping Matrix
@@ -245,7 +246,10 @@ function z = f_z(M, K, C, w)
     % Optimization Parameter Vector
     % [a, b]
     x0 = [1, 1];
-    x = fminsearch(@(x) rms(x(1), x(2)), x0);
+    [x, ~, flag] = fminsearch(@(x) rms(x(1), x(2)), x0);
+    if flag ~= 1
+        error("Rayleigh Damping Not Found! Flag: %.0f", flag);
+    end
     a = x(1);
     b = x(2);
     % Damping Ratios
