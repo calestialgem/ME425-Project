@@ -73,7 +73,6 @@ file.prmat("[-] M", M, "%5.0f");
 file.prmat("[-] K", K, "%5.0f");
 file.prmat("[-] M_", M_, "%5.1f");
 file.prmat("[-] K_", K_, "%5.1f");
-
 for j = 1:n
     file.print("[*] w_%1.0f = %5.3f %5s", j, w(j), "rad/s");
     file.prvec(sprintf("[*] v_%1.0f", j), P(j, :), "%5.1f");
@@ -182,9 +181,6 @@ w_e_range = max(w)*(0:1.5e-3:1.5);
 % [ca1, ca2]
 x0 = [40, 10];
 [x, ~, flag] = fminsearch(@(x) f_T_max(n, m, na, [x(1); x(2)], M, K, w_e_range, w, f, S, P_), x0);
-if flag ~= 1
-    error("Absorber Dampings Not Found! Flag: %.0f", flag);
-end
 % Absorber Dampings
 ca = [x(1); x(2)];
 % Damping Matrix
@@ -199,10 +195,21 @@ end
 file.print("");
 file.print("Part C:");
 file.print("~~~~~~~");
+if flag == 0
+    file.print("[!] Optimization reached maximum iterations!");
+elseif flag ~= 1
+    file.print("[!] An error occured while optimizing!");
+end
 file.prvec("[-] Ia", Ia, "%7.3f");
 file.prvec("[-] na", na, "%7.0f");
 file.prmat("[-] M", M, "%7.1f");
 file.prmat("[-] K", K, "%7.1f");
+file.prmat("[-] M_", M_, "%7.1f");
+file.prmat("[-] K_", K_, "%7.1f");
+for j = 1:n+m
+    file.print("[*] w_%1.0f = %5.3f %5s", j, w(j), "rad/s");
+    file.prvec(sprintf("[*] v_%1.0f", j), P(j, :), "%5.1f");
+end
 file.prvec("[-] x0", x0, "%7.3f");
 file.prvec("[-] x", x, "%7.3f");
 file.prvec("[-] ca", ca, "%7.3f");
@@ -246,10 +253,7 @@ function z = f_z(M, K, C, w)
     % Optimization Parameter Vector
     % [a, b]
     x0 = [1, 1];
-    [x, ~, flag] = fminsearch(@(x) rms(x(1), x(2)), x0);
-    if flag ~= 1
-        error("Rayleigh Damping Not Found! Flag: %.0f", flag);
-    end
+    x = fminsearch(@(x) rms(x(1), x(2)), x0);
     a = x(1);
     b = x(2);
     % Damping Ratios
