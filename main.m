@@ -102,8 +102,10 @@ T_n_range = zeros(size(w_e_range));
 for j = 1:length(w_e_range)
     % Base Excitation Frequency
     w_e = w_e_range(j);
+    % Normalized Excitation Frequencies
+    r = w_e./w;
     % Modal Displacement Vector (Divided by exp(iwt))
-    R = f./(w.^2-w_e^2);
+    R = (f./w.^2)./(1-r.^2);
     % Displacement Vector (Divided by exp(iwt))
     T_ = S*R;
     T_n_range(j) = T_(n);
