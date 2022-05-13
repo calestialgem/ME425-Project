@@ -175,12 +175,14 @@ F(1) = k*P_;
 S = M_*P;
 % Modal Forcing (Divided by exp(iwt))
 f = P'*M_*F;
-% Excitation Frequency Range
-w_e_range = max(w)*(0:1.5e-3:1.5);
+% Excitation Frequency Limit
+w_e_max = max(w)*1.5;
 % Optimization Parameter Vector
-% [ca1, ca2]
-x0 = [40, 10];
-[x, ~, flag] = fminsearch(@(x) f_T_max(n, m, na, [x(1); x(2)], M, K, w_e_range, w, f, S, P_), x0);
+% [ca1, ca2, w_e]
+x0 = [40, 10, 5];
+x_lb = [0, 0, 0];
+x_ub = [1000, 1000, w_e_max];
+[x, ~, ~, flag] = fminimax(@(x) f_T(n, m, na, [x(1); x(2)], M, K, x(3), w, f, S, P_), x0, [], [], [], [], x_lb, x_ub);
 % Absorber Dampings
 ca = [x(1); x(2)];
 % Damping Matrix
@@ -215,8 +217,8 @@ file.prvec("[-] x", x, "%7.3f");
 file.prvec("[-] ca", ca, "%7.3f");
 file.prmat("[-] C", C, "%7.1f");
 
-% Maximum Transmissibility
-function T_max = f_T_max(n, m, na, ca, M, K, w_e_range, w, f, S, P_)
+% Transmissibility
+function T = f_T(n, m, na, ca, M, K, w_e, w, f, S, P_)
     % Damping Matrix
     C = zeros(n+m);
     for j = 1:m
@@ -228,22 +230,14 @@ function T_max = f_T_max(n, m, na, ca, M, K, w_e_range, w, f, S, P_)
     % Damping Ratios
     z = f_z(M, K, C, w);
     % Maximum Last Disk Displacement (Divided by exp(iwt))
-    T_n_max = -inf;
-    for j = 1:length(w_e_range)
-        % Base Excitation Frequency
-        w_e = w_e_range(j);
-        % Normalized Excitation Frequencies
-        r = w_e./w;
-        % Modal Displacement Vector (Divided by exp(iwt))
-        R = (f./w.^2)./(((1-r.^2)./(2.*z.*r)).^2+1).^(1/2);
-        % Displacement Vector (Divided by exp(iwt))
-        T_ = S*R;
-        if T_n_max < T_(n)
-            T_n_max = T_(n);
-        end
-    end
-    % Maximum Transmissibility
-    T_max = abs(T_n_max)/P_;
+    % Normalized Excitation Frequencies
+    r = w_e./w;
+    % Modal Displacement Vector (Divided by exp(iwt))
+    R = (f./w.^2)./(((1-r.^2)./(2.*z.*r)).^2+1).^(1/2);
+    % Displacement Vector (Divided by exp(iwt))
+    T_ = S*R;
+    % Transmissibility
+    T = abs(T_(n))/P_;
 end
 
 % Rayleigh Damping Approximation
