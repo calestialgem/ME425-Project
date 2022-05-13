@@ -178,11 +178,19 @@ f = P'*M_*F;
 % Excitation Frequency Limit
 w_e_max = max(w)*1.5;
 % Optimization Parameter Vector
-% [ca1, ca2, w_e]
-x0 = [40, 10, 5];
-x_lb = [0, 0, 0];
-x_ub = [1000, 1000, w_e_max];
-[x, ~, ~, flag] = fminimax(@(x) f_T(n, m, na, [x(1); x(2)], M, K, x(3), w, f, S, P_), x0, [], [], [], [], x_lb, x_ub);
+% [a, b, w_e, ca1, ca2]
+% Initial Value
+x_0 = [0.5, 0.01, max(w), 40, 10];
+% Lower Bound
+x_lb = [0, 0, 0, 0, 0];
+% Upper Bound
+x_ub = [1000, 1000, w_e_max, 1000, 1000];
+% Optimized Function
+x_f = @(x) f_T(n, x(1), x(2), x(3), w, f, S, P_);
+% Nonlinear Constraint Function
+x_c = @(x) [0, f_rms(n, m, na, [x(4); x(5)], x(1), x(2), m, K)];
+% Optimization Results
+[x, ~, ~, flag] = fminimax(x_f, x_0, [], [], [], [], x_lb, x_ub, x_c);
 % Absorber Dampings
 ca = [x(1); x(2)];
 % Damping Matrix
@@ -212,23 +220,17 @@ for j = 1:n+m
     file.print("[*] w_%1.0f = %5.3f %5s", j, w(j), "rad/s");
     file.prvec(sprintf("[*] v_%1.0f", j), P(j, :), "%5.1f");
 end
-file.prvec("[-] x0", x0, "%7.3f");
+file.prvec("[-] x_0", x_0, "%7.3f");
+file.prvec("[-] x_lb", x_lb, "%7.3f");
+file.prvec("[-] x_ub", x_ub, "%7.3f");
 file.prvec("[-] x", x, "%7.3f");
 file.prvec("[-] ca", ca, "%7.3f");
 file.prmat("[-] C", C, "%7.1f");
 
 % Transmissibility
-function T = f_T(n, m, na, ca, M, K, w_e, w, f, S, P_)
-    % Damping Matrix
-    C = zeros(n+m);
-    for j = 1:m
-        C(n+j, n+j) = ca(j);
-        C(n+j, na(j)) = -ca(j);
-        C(na(j), n+j) = -ca(j);
-        C(na(j), na(j)) = ca(j);
-    end
+function T = f_T(n, a, b, w_e, w, f, S, P_)
     % Damping Ratios
-    z = f_z(M, K, C, w);
+    z = w/a/2+w*b/2;
     % Maximum Last Disk Displacement (Divided by exp(iwt))
     % Normalized Excitation Frequencies
     r = w_e./w;
@@ -240,16 +242,18 @@ function T = f_T(n, m, na, ca, M, K, w_e, w, f, S, P_)
     T = abs(T_(n))/P_;
 end
 
-% Rayleigh Damping Approximation
-function z = f_z(M, K, C, w)
-    % Root-Mean-Square Difference Function
-    rms = @(a, b) sqrt(sum(sum((C-a*M-b*K).^2)))/length(C);
-    % Optimization Parameter Vector
-    % [a, b]
-    x0 = [1, 1];
-    x = fminsearch(@(x) rms(x(1), x(2)), x0);
-    a = x(1);
-    b = x(2);
-    % Damping Ratios
-    z = w/a/2+w*b/2;
+% Root-Mean-Square Difference of Rayleigh Damping Approximation
+function rms = f_rms(n, m, na, ca, a, b, M, K)
+    % Real Damping Matrix
+    C = zeros(n+m);
+    for j = 1:m
+        C(n+j, n+j) = ca(j);
+        C(n+j, na(j)) = -ca(j);
+        C(na(j), n+j) = -ca(j);
+        C(na(j), na(j)) = ca(j);
+    end
+    % Rayleigh Damping Approximation
+    U = a*M+b*K;
+    % Root-Mean-Square Difference of Rayleigh Damping Approximation
+    rms = sqrt(sum(sum((C-U).^2)))/length(C);
 end
