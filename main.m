@@ -187,27 +187,21 @@ F(1) = k * P_;
 w_e_max = max(w) * 1.5;
 % Optimization Parameter Vector
 % [ca1, ca2]
+f_ca = @(x) [x(1); x(2)];
 % Initial Value
 x_0 = [8, 5];
 % Optimized Function
-x_f = @(x) f_T_max(n, m, na, [x(1); x(2)], w_e_max, M, K, F, P_);
+x_f = @(x) f_T_max(n, m, na, f_ca(x), w_e_max, M, K, F, P_);
 % Optimization Options
 x_options = optimset('fminsearch');
 x_options.MaxIterations = 2e3;
 x_options.MaxFunctionEvaluations = 1e6;
-x_options.Display = 'iter';
 % Optimization Results
 [x, ~, x_flag, x_output] = fminsearch(x_f, x_0, x_options);
 % Absorber Dampings
-ca = [x(1); x(2)];
+ca = f_ca(x);
 % Damping Matrix
-C = zeros(n + m);
-for j = 1:m
-    C(n + j, n + j) = ca(j);
-    C(n + j, na(j)) = -ca(j);
-    C(na(j), n + j) = -ca(j);
-    C(na(j), na(j)) = ca(j);
-end
+C = f_C(n, m, na, ca);
 % Elapsed Time
 c_elapsed = toc(c_start);
 
@@ -241,13 +235,7 @@ file.prmat("[-] C", C, "%7.1f");
 % Maximum Transmissibility in the Excitation Frequency Range
 function T_max = f_T_max(n, m, na, ca, w_e_max, M, K, F, P_)
     % Damping Matrix
-    C = zeros(n + m);
-    for j = 1:m
-        C(n + j, n + j) = ca(j);
-        C(n + j, na(j)) = -ca(j);
-        C(na(j), n + j) = -ca(j);
-        C(na(j), na(j)) = ca(j);
-    end
+    C = f_C(n, m, na, ca);
     % Optimization Parameter Vector
     % [w_e]
     % Lower Bound
@@ -270,4 +258,16 @@ function T = f_T(n, w_e, M, C, K, F, P_)
     T_ = A \ F;
     % Transmissibility
     T = abs(T_(n)) / P_;
+end
+
+% Damping Matrix
+function C = f_C(n, m, na, ca)
+    % Damping Matrix
+    C = zeros(n + m);
+    for j = 1:m
+        C(n + j, n + j) = ca(j);
+        C(n + j, na(j)) = -ca(j);
+        C(na(j), n + j) = -ca(j);
+        C(na(j), na(j)) = ca(j);
+    end
 end
