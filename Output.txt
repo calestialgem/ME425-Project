@@ -51,7 +51,7 @@ Part A:
 
 Part B:
 ~~~~~~~
-[-] Elapsed Time:   2.4 s
+[-] Elapsed Time:   0.5 s
 [-] P_ = 1.000 
 [-] F [5]:  125.00   0.00   0.00   0.00   0.00
 [-] f [5]:    4.75 -12.74  16.68  15.33  -9.11
@@ -64,8 +64,13 @@ Part B:
 
 Part C:
 ~~~~~~~
-[-] Elapsed Time:   1.7 s
+[-] Elapsed Time:   1.2 s
 [!] Number of iterations exceeded options.MaxIterations or the number of function evaluations exceeded options.MaxFunctionEvaluations!
+[?] Optimizer Output: 
+Solver stopped prematurely.
+
+fminimax stopped because it exceeded the function evaluation limit,
+options.MaxFunctionEvaluations = 2.000000e+03.
 [-] Ia [2]:   0.100  0.100
 [-] na [2]:       1      5
 [-] M [7, 7]: 

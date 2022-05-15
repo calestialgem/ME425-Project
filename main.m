@@ -200,9 +200,11 @@ x_ub = [w_e_max, 100, 100];
 % Optimized Function
 x_f = @(x) f_T(n, m, na, [x(2); x(3)], w, x(1), M, K, f, S, P_);
 % Optimization Options
-x_options = optimoptions('fminimax', 'MaxIterations', 1000, 'MaxFunctionEvaluations', 1000);
+x_options = optimoptions('fminimax');
+x_options.MaxIterations = 2000;
+x_options.MaxFunctionEvaluations = 2000;
 % Optimization Results
-[x, ~, ~, flag] = fminimax(x_f, x_0, [], [], [], [], x_lb, x_ub, [], x_options);
+[x, ~, ~, flag, output] = fminimax(x_f, x_0, [], [], [], [], x_lb, x_ub, [], x_options);
 % Absorber Dampings
 ca = [x(2); x(3)];
 % Damping Matrix
@@ -233,6 +235,7 @@ elseif flag == -2
 elseif flag ~= 1
     file.print("[!] An unknown error occured!");
 end
+file.print("[?] Optimizer Output: \n%s", output.message);
 file.prvec("[-] Ia", Ia, "%7.3f");
 file.prvec("[-] na", na, "%7.0f");
 file.prmat("[-] M", M, "%7.1f");
