@@ -188,7 +188,7 @@ x_ub = [1000, 1000, w_e_max, 1000, 1000];
 % Optimized Function
 x_f = @(x) f_T(n, x(1), x(2), x(3), w, f, S, P_);
 % Nonlinear Constraint Function
-x_c = @(x) [0, f_rms(n, m, na, [x(4); x(5)], x(1), x(2), m, K)];
+x_c = @(x) f_rms(n, m, na, [x(4); x(5)], x(1), x(2), M, K);
 % Optimization Results
 [x, ~, ~, flag] = fminimax(x_f, x_0, [], [], [], [], x_lb, x_ub, x_c);
 % Absorber Dampings
@@ -243,7 +243,7 @@ function T = f_T(n, a, b, w_e, w, f, S, P_)
 end
 
 % Root-Mean-Square Difference of Rayleigh Damping Approximation
-function rms = f_rms(n, m, na, ca, a, b, M, K)
+function [c, ceq] = f_rms(n, m, na, ca, a, b, M, K)
     % Real Damping Matrix
     C = zeros(n + m);
     for j = 1:m
@@ -255,5 +255,9 @@ function rms = f_rms(n, m, na, ca, a, b, M, K)
     % Rayleigh Damping Approximation
     U = a * M + b * K;
     % Root-Mean-Square Difference of Rayleigh Damping Approximation
-    rms = sqrt(sum(sum((C - U).^2))) / length(C);
+    rms = sqrt(sum(sum((C - U).^2))) / (n * m);
+    % Do not use nonequality constraint.
+    c = [];
+    % Equality constraint is such that the rms will be closest to zero.
+    ceq = rms;
 end
