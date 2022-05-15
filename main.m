@@ -180,13 +180,9 @@ w = zeros(n + m, 1);
 for j = 1:n + m
     w(j) = L(j, j)^(1/2);
 end
-% Force Vector (Divided by exp(iwt))
+% Force Vector (Divided by sin(wt))
 F = zeros(n + m, 1);
 F(1) = k * P_;
-% Modal Displacement Transformation
-S = M_ * P;
-% Modal Forcing (Divided by exp(iwt))
-f = P' * M_ * F;
 % Excitation Frequency Limit
 w_e_max = max(w) * 1.5;
 % Optimization Parameter Vector
@@ -194,7 +190,7 @@ w_e_max = max(w) * 1.5;
 % Initial Value
 x_0 = [40, 10];
 % Optimized Function
-x_f = @(x) f_T_max(n, m, na, [x(1); x(2)], w, w_e_max, M, K, f, S, P_);
+x_f = @(x) f_T_max(n, m, na, [x(1); x(2)], w_e_max, M, K, F, P_);
 % Optimization Options
 x_options = optimset('fminsearch');
 x_options.MaxIterations = 2000;
@@ -243,9 +239,9 @@ file.prvec("[-] ca", ca, "%7.3f");
 file.prmat("[-] C", C, "%7.1f");
 
 % Maximum Transmissibility in the Excitation Frequency Range
-function T_max = f_T_max(n, m, na, ca, w, w_e_max, M, K, f, S, P_)
+function T_max = f_T_max(n, m, na, ca, w_e_max, M, K, F, P_)
     % Damping Ratios
-    z = f_z(n, m, na, ca, w, M, K);
+    [a, b] = f_a_b(n, m, na, ca, M, K);
     % Optimization Parameter Vector
     % [w_e]
     % Lower Bound
@@ -253,7 +249,7 @@ function T_max = f_T_max(n, m, na, ca, w, w_e_max, M, K, f, S, P_)
     % Upper Bound
     x_2 = w_e_max;
     % Optimized Function
-    x_f = @(x) -f_T(n, z, w, x, f, S, P_);
+    x_f = @(x) -f_T(n, a, b, x, M, K, F, P_);
     % Optimization Results
     [~, x_fval] = fminbnd(x_f, x_1, x_2);
     % Maximum Transmissibility
@@ -261,19 +257,17 @@ function T_max = f_T_max(n, m, na, ca, w, w_e_max, M, K, f, S, P_)
 end
 
 % Transmissibility for the Given Excitation Frequency
-function T = f_T(n, z, w, w_e, f, S, P_)
-    % Normalized Excitation Frequencies
-    r = w_e ./ w;
-    % Modal Displacement Vector (Divided by exp(iwt))
-    R = (f ./ w.^2) ./ (((1 - r.^2) ./ (2 .* z .* r)).^2 + 1).^(1/2);
-    % Displacement Vector (Divided by exp(iwt))
-    T_ = S * R;
+function T = f_T(n, a, b, w_e, M, K, F, P_)
+    % Left Hand Side Matrix After sin(wt) is Cancelled
+    A = -w_e^2 * M + w_e * (a * M + b * K) + K;
+    % Displacement Vector (Divided by sin(wt))
+    T_ = A \ F;
     % Transmissibility
     T = abs(T_(n)) / P_;
 end
 
 % Rayleigh Damping Approximation
-function z = f_z(n, m, na, ca, w, M, K)
+function [a, b] = f_a_b(n, m, na, ca, M, K)
     % Real Damping Matrix
     C = zeros(n + m);
     for j = 1:m
@@ -295,6 +289,4 @@ function z = f_z(n, m, na, ca, w, M, K)
     % Rayleigh Damping
     a = x(1);
     b = x(2);
-    % Damping Ratios
-    z = w / a / 2 + w * b / 2;
 end

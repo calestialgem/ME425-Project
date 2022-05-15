@@ -51,7 +51,7 @@ Part A:
 
 Part B:
 ~~~~~~~
-[-] Elapsed Time:   0.6 s
+[-] Elapsed Time:   0.8 s
 [-] P_ = 1.000 
 [-] F [5]:  125.00   0.00   0.00   0.00   0.00
 [-] f [5]:    4.75 -12.74  16.68  15.33  -9.11
@@ -64,12 +64,11 @@ Part B:
 
 Part C:
 ~~~~~~~
-[-] Elapsed Time:   0.3 s
-[!] Number of iterations exceeded options.MaxIter or number of function evaluations exceeded options.MaxFunEvals!
+[-] Elapsed Time:   0.2 s
 [?] Optimizer Output: 
-Exiting: Maximum number of function evaluations has been exceeded
-         - increase MaxFunEvals option.
-         Current function value: NaN 
+Optimization terminated:
+ the current x satisfies the termination criteria using OPTIONS.TolX of 1.000000e-04 
+ and F(X) satisfies the convergence criteria using OPTIONS.TolFun of 1.000000e-04 
 
 [-] Ia [2]:   0.100  0.100
 [-] na [2]:       1      5
@@ -120,13 +119,13 @@ Exiting: Maximum number of function evaluations has been exceeded
 [*] w_7 = 4.797 rad/s
 [*] v_7 [7]:   0.0  1.0  0.0  0.0  0.0  0.0 -0.0
 [-] x_0 [2]:  40.000 10.000
-[-] x [2]:  40.000 10.000
-[-] ca [2]:  40.000 10.000
+[-] x [2]:  40.775 10.690
+[-] ca [2]:  40.775 10.690
 [-] C [7, 7]: 
-   40.0    0.0    0.0    0.0    0.0  -40.0    0.0
+   40.8    0.0    0.0    0.0    0.0  -40.8    0.0
     0.0    0.0    0.0    0.0    0.0    0.0    0.0
     0.0    0.0    0.0    0.0    0.0    0.0    0.0
     0.0    0.0    0.0    0.0    0.0    0.0    0.0
-    0.0    0.0    0.0    0.0   10.0    0.0  -10.0
-  -40.0    0.0    0.0    0.0    0.0   40.0    0.0
-    0.0    0.0    0.0    0.0  -10.0    0.0   10.0
+    0.0    0.0    0.0    0.0   10.7    0.0  -10.7
+  -40.8    0.0    0.0    0.0    0.0   40.8    0.0
+    0.0    0.0    0.0    0.0  -10.7    0.0   10.7
