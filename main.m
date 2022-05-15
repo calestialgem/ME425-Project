@@ -239,7 +239,6 @@ file.prmat("[-] C", C, "%7.1f");
 function T = f_T(n, m, na, ca, w, w_e, M, K, f, S, P_)
     % Damping Ratios
     z = f_z(n, m, na, ca, w, M, K);
-    % Maximum Last Disk Displacement (Divided by exp(iwt))
     % Normalized Excitation Frequencies
     r = w_e ./ w;
     % Modal Displacement Vector (Divided by exp(iwt))
