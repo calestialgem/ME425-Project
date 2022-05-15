@@ -185,7 +185,7 @@ f_ca = @(x) [x(1); x(2)];
 % Initial Value
 x_0 = [8, 5];
 % Optimized Function
-x_f = @(x) f_T_max(n, m, na, f_ca(x), w_e_max, M, K, F, P_);
+x_f = @(x) f_T_max(n, w_e_max, M, f_C(n, m, na, f_ca(x)), K, F, P_);
 % Optimization Options
 x_options = optimset('fminsearch');
 x_options.MaxIterations = 2e3;
@@ -227,9 +227,7 @@ file.prvec("[-] ca", ca, "%7.3f");
 file.prmat("[-] C", C, "%7.1f");
 
 % Maximum Transmissibility in the Excitation Frequency Range
-function T_max = f_T_max(n, m, na, ca, w_e_max, M, K, F, P_)
-    % Damping Matrix
-    C = f_C(n, m, na, ca);
+function T_max = f_T_max(n, w_e_max, M, C, K, F, P_)
     % Optimization Parameter Vector
     % [w_e]
     % Lower Bound
