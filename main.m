@@ -182,15 +182,17 @@ w_e_max = max(w) * 1.5;
 % Initial Value
 x_0 = [0.5, 0.01, max(w), 40, 10];
 % Lower Bound
-x_lb = [0, 0, 0, 0, 0];
+x_lb = [0, 0, 0, 0.1, 0.1];
 % Upper Bound
-x_ub = [1000, 1000, w_e_max, 1000, 1000];
+x_ub = [100, 100, w_e_max, 100, 100];
 % Optimized Function
 x_f = @(x) f_T(n, x(1), x(2), x(3), w, f, S, P_);
 % Nonlinear Constraint Function
 x_c = @(x) f_rms(n, m, na, [x(4); x(5)], x(1), x(2), M, K);
+% Optimization Options
+x_options = optimoptions('fminimax', 'MaxIterations', 1e4, 'MaxFunctionEvaluations', 1e4);
 % Optimization Results
-[x, ~, ~, flag] = fminimax(x_f, x_0, [], [], [], [], x_lb, x_ub, x_c);
+[x, ~, ~, flag] = fminimax(x_f, x_0, [], [], [], [], x_lb, x_ub, x_c, x_options);
 % Absorber Dampings
 ca = [x(1); x(2)];
 % Damping Matrix
@@ -206,9 +208,17 @@ file.print("");
 file.print("Part C:");
 file.print("~~~~~~~");
 if flag == 0
-    file.print("[!] Optimization reached maximum iterations!");
+    file.print("[!] Number of iterations exceeded options.MaxIterations or the number of function evaluations exceeded options.MaxFunctionEvaluations!");
+elseif flag == 4
+    file.print("[!] Magnitude of the search direction was less than the specified tolerance, and the constraint violation was less than options.ConstraintTolerance!");
+elseif flag == 5
+    file.print("[!] Magnitude of the directional derivative was less than the specified tolerance, and the constraint violation was less than options.ConstraintTolerance!");
+elseif flag == -1
+    file.print("[!] Stopped by an output function or plot function!");
+elseif flag == -2
+    file.print("[!] No feasible point was found!");
 elseif flag ~= 1
-    file.print("[!] An error occured while optimizing!");
+    file.print("[!] An unknown error occured!");
 end
 file.prvec("[-] Ia", Ia, "%7.3f");
 file.prvec("[-] na", na, "%7.0f");
@@ -255,9 +265,9 @@ function [c, ceq] = f_rms(n, m, na, ca, a, b, M, K)
     % Rayleigh Damping Approximation
     U = a * M + b * K;
     % Root-Mean-Square Difference of Rayleigh Damping Approximation
-    rms = sqrt(sum(sum((C - U).^2))) / (n * m);
-    % Do not use nonequality constraint.
-    c = [];
-    % Equality constraint is such that the rms will be closest to zero.
-    ceq = rms;
+    rms = sqrt(sum(sum((C - U).^2))) / (n * m) / (max(ca) - min(ca));
+    % Nonequality constraint is such that the rms will be small.
+    c = rms - 0.01; % Less than 1 %.
+    % Do not use equality constraint.
+    ceq = [];
 end
