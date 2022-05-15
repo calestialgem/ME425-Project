@@ -51,7 +51,7 @@ Part A:
 
 Part B:
 ~~~~~~~
-[-] Elapsed Time:   0.5 s
+[-] Elapsed Time:   0.6 s
 [-] P_ = 1.000 
 [-] F [5]:  125.00   0.00   0.00   0.00   0.00
 [-] f [5]:    4.75 -12.74  16.68  15.33  -9.11
@@ -64,7 +64,7 @@ Part B:
 
 Part C:
 ~~~~~~~
-[-] Elapsed Time:   1.2 s
+[-] Elapsed Time:   1.4 s
 [!] Number of iterations exceeded options.MaxIterations or the number of function evaluations exceeded options.MaxFunctionEvaluations!
 [?] Optimizer Output: 
 Solver stopped prematurely.
