@@ -64,7 +64,7 @@ Part B:
 
 Part C:
 ~~~~~~~
-[-] Elapsed Time:   4.9 s
+[-] Elapsed Time:  48.9 s
 [!] Number of iterations exceeded options.MaxIterations or the number of function evaluations exceeded options.MaxFunctionEvaluations!
 [-] Ia [2]:   0.100  0.100
 [-] na [2]:       1      5
