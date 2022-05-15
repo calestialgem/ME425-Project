@@ -177,19 +177,17 @@ end
 % Force Vector (Divided by sin(wt))
 F = zeros(n + m, 1);
 F(1) = k * P_;
-% Excitation Frequency Limit
-w_e_max = max(w) * 1.5;
 % Optimization Parameter Vector
-% [w_e, ca1, ca2]
-f_ca = @(x) [x(2); x(3)];
+% [ca1, ca2]
+f_ca = @(x) [x(1); x(2)];
 % Initial Value
-x_0 = [max(w), 8, 5];
+x_0 = [10, 10];
 % Lower Bound
-x_lb = [0, 0.1, 0.1];
+x_lb = [0.1, 0.1];
 % Upper Bound
-x_ub = [w_e_max, 1000, 1000];
+x_ub = [1000, 1000];
 % Optimized Function
-x_f = @(x) f_T(n, x(1), M, f_C(n, m, na, f_ca(x)), K, F, P_);
+x_f = @(x) f_T_range(n, w, M, f_C(n, m, na, f_ca(x)), K, F, P_);
 % Optimization Options
 x_options = optimoptions('fminimax');
 x_options.MaxIterations = 2e3;
@@ -236,14 +234,20 @@ file.prvec("[-] x", x, "%7.3f");
 file.prvec("[-] ca", ca, "%7.3f");
 file.prmat("[-] C", C, "%7.1f");
 
-% Transmissibility for the Given Excitation Frequency
-function T = f_T(n, w_e, M, C, K, F, P_)
-    % Left Hand Side Matrix After sin(wt) is Cancelled
-    A = -w_e^2 * M + w_e * C + K;
-    % Displacement Vector (Divided by sin(wt))
-    T_ = A \ F;
-    % Transmissibility
-    T = abs(T_(n) / P_);
+% Transmissibility Range for the Given Excitation Frequency Range
+function T_range = f_T_range(n, w_e_range, M, C, K, F, P_)
+    % Transmissibility Range
+    T_range = zeros(size(w_e_range));
+    for j = 1:n
+        % Base Excitation Frequency
+        w_e = w_e_range(n);
+        % Left Hand Side Matrix After sin(wt) is Cancelled
+        A = -w_e^2 * M + w_e * C + K;
+        % Displacement Vector (Divided by sin(wt))
+        T_ = A \ F;
+        % Transmissibility
+        T_range(j) = abs(T_(n) / P_);
+    end
 end
 
 % Damping Matrix
