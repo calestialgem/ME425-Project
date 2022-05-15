@@ -190,11 +190,11 @@ f = P' * M_ * F;
 % Excitation Frequency Limit
 w_e_max = max(w) * 1.5;
 % Optimization Parameter Vector
-% [w_e, ca1, ca2]
+% [ca1, ca2]
 % Initial Value
-x_0 = [max(w), 40, 10];
+x_0 = [40, 10];
 % Optimized Function
-x_f = @(x) f_T(n, m, na, [x(2); x(3)], w, x(1), M, K, f, S, P_);
+x_f = @(x) f_T_max(n, m, na, [x(1); x(2)], w, w_e_max, M, K, f, S, P_);
 % Optimization Options
 x_options = optimset('fminsearch');
 x_options.MaxIterations = 2000;
@@ -203,7 +203,7 @@ x_options.Display = 'iter';
 % Optimization Results
 [x, ~, x_flag, x_output] = fminsearch(x_f, x_0, x_options);
 % Absorber Dampings
-ca = [x(2); x(3)];
+ca = [x(1); x(2)];
 % Damping Matrix
 C = zeros(n + m);
 for j = 1:m
@@ -242,10 +242,26 @@ file.prvec("[-] x", x, "%7.3f");
 file.prvec("[-] ca", ca, "%7.3f");
 file.prmat("[-] C", C, "%7.1f");
 
-% Transmissibility
-function T = f_T(n, m, na, ca, w, w_e, M, K, f, S, P_)
+% Maximum Transmissibility in the Excitation Frequency Range
+function T_max = f_T_max(n, m, na, ca, w, w_e_max, M, K, f, S, P_)
     % Damping Ratios
     z = f_z(n, m, na, ca, w, M, K);
+    % Optimization Parameter Vector
+    % [w_e]
+    % Lower Bound
+    x_1 = 0;
+    % Upper Bound
+    x_2 = w_e_max;
+    % Optimized Function
+    x_f = @(x) -f_T(n, z, w, x, f, S, P_);
+    % Optimization Results
+    [~, x_fval] = fminbnd(x_f, x_1, x_2);
+    % Maximum Transmissibility
+    T_max = -x_fval;
+end
+
+% Transmissibility for the Given Excitation Frequency
+function T = f_T(n, z, w, w_e, f, S, P_)
     % Normalized Excitation Frequencies
     r = w_e ./ w;
     % Modal Displacement Vector (Divided by exp(iwt))
