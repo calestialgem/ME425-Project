@@ -57,12 +57,20 @@ Part B:
 
 Part C:
 ~~~~~~~
-[-] Elapsed Time:   0.1 s
+[-] Elapsed Time:   0.0 s
+[!] Magnitude of the search direction was less than the specified tolerance, and the constraint violation was less than options.ConstraintTolerance!
 [?] Optimizer Output: 
-Optimization terminated:
- the current x satisfies the termination criteria using OPTIONS.TolX of 1.000000e-04 
- and F(X) satisfies the convergence criteria using OPTIONS.TolFun of 1.000000e-04 
+Local minimum possible. Constraints satisfied.
 
+fminimax stopped because the size of the current search direction is less than
+twice the value of the step size tolerance and constraints are 
+satisfied to within the value of the constraint tolerance.
+
+<stopping criteria details>
+
+Optimization stopped because the norm of the current search direction, 2.285817e-08,
+is less than 2*options.StepTolerance = 1.000000e-06, and the maximum constraint 
+violation, 0.000000e+00, is less than options.ConstraintTolerance = 1.000000e-06.
 [-] Ia [2]:   0.100  0.100
 [-] na [2]:       1      5
 [-] M [7, 7]: 
@@ -111,14 +119,14 @@ Optimization terminated:
 [*] v_6 [7]:   1.0  0.0  0.0  0.0  0.0  0.0 -0.0
 [*] w_7 = 4.797 rad/s
 [*] v_7 [7]:   0.0  1.0  0.0  0.0  0.0  0.0 -0.0
-[-] x_0 [2]:   8.000  5.000
-[-] x [2]:   8.007  3.802
-[-] ca [2]:   8.007  3.802
+[-] x_0 [3]:   4.797  8.000  5.000
+[-] x [3]:   7.196  7.872  4.900
+[-] ca [2]:   7.872  4.900
 [-] C [7, 7]: 
-    8.0    0.0    0.0    0.0    0.0   -8.0    0.0
+    7.9    0.0    0.0    0.0    0.0   -7.9    0.0
     0.0    0.0    0.0    0.0    0.0    0.0    0.0
     0.0    0.0    0.0    0.0    0.0    0.0    0.0
     0.0    0.0    0.0    0.0    0.0    0.0    0.0
-    0.0    0.0    0.0    0.0    3.8    0.0   -3.8
-   -8.0    0.0    0.0    0.0    0.0    8.0    0.0
-    0.0    0.0    0.0    0.0   -3.8    0.0    3.8
+    0.0    0.0    0.0    0.0    4.9    0.0   -4.9
+   -7.9    0.0    0.0    0.0    0.0    7.9    0.0
+    0.0    0.0    0.0    0.0   -4.9    0.0    4.9

@@ -180,18 +180,22 @@ F(1) = k * P_;
 % Excitation Frequency Limit
 w_e_max = max(w) * 1.5;
 % Optimization Parameter Vector
-% [ca1, ca2]
-f_ca = @(x) [x(1); x(2)];
+% [w_e, ca1, ca2]
+f_ca = @(x) [x(2); x(3)];
 % Initial Value
-x_0 = [8, 5];
+x_0 = [max(w), 8, 5];
+% Lower Bound
+x_lb = [0, 0.1, 0.1];
+% Upper Bound
+x_ub = [w_e_max, 1000, 1000];
 % Optimized Function
-x_f = @(x) f_T_max(n, w_e_max, M, f_C(n, m, na, f_ca(x)), K, F, P_);
+x_f = @(x) f_T(n, x(1), M, f_C(n, m, na, f_ca(x)), K, F, P_);
 % Optimization Options
-x_options = optimset('fminsearch');
+x_options = optimoptions('fminimax');
 x_options.MaxIterations = 2e3;
 x_options.MaxFunctionEvaluations = 1e6;
 % Optimization Results
-[x, ~, x_flag, x_output] = fminsearch(x_f, x_0, x_options);
+[x, ~, ~, x_flag, x_output] = fminimax(x_f, x_0, [], [], [], [], x_lb, x_ub, [], x_options);
 % Absorber Dampings
 ca = f_ca(x);
 % Damping Matrix
@@ -204,11 +208,17 @@ file.print("Part C:");
 file.print("~~~~~~~");
 file.print("[-] Elapsed Time: %5.1f s", c_elapsed);
 if x_flag == 0
-    file.print("[!] Number of iterations exceeded options.MaxIter or number of function evaluations exceeded options.MaxFunEvals!");
+    file.print("[!] Number of iterations exceeded options.MaxIterations or the number of function evaluations exceeded options.MaxFunctionEvaluations!");
+elseif x_flag == 4
+    file.print("[!] Magnitude of the search direction was less than the specified tolerance, and the constraint violation was less than options.ConstraintTolerance!");
+elseif x_flag == 5
+    file.print("[!] Magnitude of the directional derivative was less than the specified tolerance, and the constraint violation was less than options.ConstraintTolerance!");
 elseif x_flag == -1
-    file.print("[!] The algorithm was terminated by the output function!");
+    file.print("[!] Stopped by an output function or plot function!");
+elseif x_flag == -2
+    file.print("[!] No feasible point was found!");
 elseif x_flag ~= 1
-    file.print("[!] An unknown error occured!");
+    file.print("[!] An unknown error occured! Flag: %d", x_flag);
 end
 file.print("[?] Optimizer Output: \n%s", x_output.message);
 file.prvec("[-] Ia", Ia, "%7.3f");
@@ -225,22 +235,6 @@ file.prvec("[-] x_0", x_0, "%7.3f");
 file.prvec("[-] x", x, "%7.3f");
 file.prvec("[-] ca", ca, "%7.3f");
 file.prmat("[-] C", C, "%7.1f");
-
-% Maximum Transmissibility in the Excitation Frequency Range
-function T_max = f_T_max(n, w_e_max, M, C, K, F, P_)
-    % Optimization Parameter Vector
-    % [w_e]
-    % Lower Bound
-    x_1 = 0;
-    % Upper Bound
-    x_2 = w_e_max;
-    % Optimized Function
-    x_f = @(x) -f_T(n, x, M, C, K, F, P_);
-    % Optimization Results
-    [~, x_fval] = fminbnd(x_f, x_1, x_2);
-    % Maximum Transmissibility
-    T_max = -x_fval;
-end
 
 % Transmissibility for the Given Excitation Frequency
 function T = f_T(n, w_e, M, C, K, F, P_)
