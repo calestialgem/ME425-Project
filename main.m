@@ -193,19 +193,15 @@ w_e_max = max(w) * 1.5;
 % [w_e, ca1, ca2]
 % Initial Value
 x_0 = [max(w), 40, 10];
-% Lower Bound
-x_lb = [0, 0.1, 0.1];
-% Upper Bound
-x_ub = [w_e_max, 100, 100];
 % Optimized Function
 x_f = @(x) f_T(n, m, na, [x(2); x(3)], w, x(1), M, K, f, S, P_);
 % Optimization Options
-x_options = optimoptions('fminimax');
+x_options = optimset('fminsearch');
 x_options.MaxIterations = 2000;
 x_options.MaxFunctionEvaluations = 2000;
 x_options.Display = 'iter';
 % Optimization Results
-[x, ~, ~, x_flag, x_output] = fminimax(x_f, x_0, [], [], [], [], x_lb, x_ub, [], x_options);
+[x, ~, x_flag, x_output] = fminsearch(x_f, x_0, x_options);
 % Absorber Dampings
 ca = [x(2); x(3)];
 % Damping Matrix
@@ -224,15 +220,9 @@ file.print("Part C:");
 file.print("~~~~~~~");
 file.print("[-] Elapsed Time: %5.1f s", c_elapsed);
 if x_flag == 0
-    file.print("[!] Number of iterations exceeded options.MaxIterations or the number of function evaluations exceeded options.MaxFunctionEvaluations!");
-elseif x_flag == 4
-    file.print("[!] Magnitude of the search direction was less than the specified tolerance, and the constraint violation was less than options.ConstraintTolerance!");
-elseif x_flag == 5
-    file.print("[!] Magnitude of the directional derivative was less than the specified tolerance, and the constraint violation was less than options.ConstraintTolerance!");
+    file.print("[!] Number of iterations exceeded options.MaxIter or number of function evaluations exceeded options.MaxFunEvals!");
 elseif x_flag == -1
-    file.print("[!] Stopped by an output function or plot function!");
-elseif x_flag == -2
-    file.print("[!] No feasible point was found!");
+    file.print("[!] The algorithm was terminated by the output function!");
 elseif x_flag ~= 1
     file.print("[!] An unknown error occured!");
 end
@@ -248,8 +238,6 @@ for j = 1:n + m
     file.prvec(sprintf("[*] v_%1.0f", j), P(j, :), "%5.1f");
 end
 file.prvec("[-] x_0", x_0, "%7.3f");
-file.prvec("[-] x_lb", x_lb, "%7.3f");
-file.prvec("[-] x_ub", x_ub, "%7.3f");
 file.prvec("[-] x", x, "%7.3f");
 file.prvec("[-] ca", ca, "%7.3f");
 file.prmat("[-] C", C, "%7.1f");
