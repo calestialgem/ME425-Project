@@ -25,9 +25,9 @@ file.print("[-] %1s = %4.0f %0s", "n", n, "");
 file.print("[-] %1s = %4.2f %0s", "u", u, "");
 
 % Rotational Inertia of a Disk
-I = 100/n;
+I = 100 / n;
 % Torsional Stiffness Between Disks
-k = 25*n;
+k = 25 * n;
 
 file.print("");
 file.print("Initial Caclculations:");
@@ -46,18 +46,18 @@ end
 K = zeros(n);
 for j = 1:n
     if j > 1
-        K(j, j-1) = -k;
+        K(j, j - 1) = -k;
     end
     if j < n
-        K(j, j+1) = -k;
-        K(j, j) = 2*k;
+        K(j, j + 1) = -k;
+        K(j, j) = 2 * k;
     else
         K(j, j) = k;
     end
 end
 % First Transformation
 M_ = M^(-1/2);
-K_ = M_*K*M_;
+K_ = M_ * K * M_;
 % Eigenvector and Eigenvalue Matrix
 [P, L] = eig(K_);
 % Natural Frequencies in rad/s
@@ -84,23 +84,23 @@ end
 P_ = 1;
 % Force Vector (Divided by exp(iwt))
 F = zeros(n, 1);
-F(1) = k*P_;
+F(1) = k * P_;
 % Modal Displacement Transformation
-S = M_*P;
+S = M_ * P;
 % Modal Forcing (Divided by exp(iwt))
-f = P'*M_*F;
+f = P' * M_ * F;
 % Excitation Frequency Range
-w_e_range = max(w)*(0:1.5e-3:1.5);
+w_e_range = max(w) * (0:1.5e-3:1.5);
 T_n_range = zeros(size(w_e_range));
 for j = 1:length(w_e_range)
     % Base Excitation Frequency
     w_e = w_e_range(j);
     % Normalized Excitation Frequencies
-    r = w_e./w;
+    r = w_e ./ w;
     % Modal Displacement Vector (Divided by exp(iwt))
-    R = (f./w.^2)./(1-r.^2);
+    R = (f ./ w.^2) ./ (1 - r.^2);
     % Displacement Vector (Divided by exp(iwt))
-    T_ = S*R;
+    T_ = S * R;
     T_n_range(j) = T_(n);
 end
 
@@ -111,7 +111,7 @@ hold('on');
 grid('on');
 xlabel('\omega');
 ylabel('|\Theta_n/\Phi|');
-plot(w_e_range, abs(T_n_range)/P_, 'LineWidth', 2);
+plot(w_e_range, abs(T_n_range) / P_, 'LineWidth', 2);
 for j = 1:n
     xline(w(j), '--');
 end
@@ -131,52 +131,52 @@ file.prmat("[-] S", S, "%7.2f");
 m = 2;
 % Absorber Inertias
 Ia = zeros(m, 1);
-Ia(1) = u/2;
-Ia(2) = u/2;
+Ia(1) = u / 2;
+Ia(2) = u / 2;
 % Absorber Positions (Assumed to be unique for each absorber.)
 na = zeros(m, 1);
 na(1) = 1;
 na(2) = n;
 % Inertia Matrix
-M = zeros(n+m);
+M = zeros(n + m);
 for j = 1:n
     M(j, j) = I;
 end
 for j = 1:m
-    M(n+j, n+j) = Ia(j);
+    M(n + j, n + j) = Ia(j);
 end
 % Stiffness Matrix
-K = zeros(n+m);
+K = zeros(n + m);
 for j = 1:n
     if j > 1
-        K(j, j-1) = -k;
+        K(j, j - 1) = -k;
     end
     if j < n
-        K(j, j+1) = -k;
-        K(j, j) = 2*k;
+        K(j, j + 1) = -k;
+        K(j, j) = 2 * k;
     else
         K(j, j) = k;
     end
 end
 % First Transformation
 M_ = M^(-1/2);
-K_ = M_*K*M_;
+K_ = M_ * K * M_;
 % Eigenvector and Eigenvalue Matrix
 [P, L] = eig(K_);
 % Natural Frequencies in rad/s
-w = zeros(n+m, 1);
-for j = 1:n+m
+w = zeros(n + m, 1);
+for j = 1:n + m
     w(j) = L(j, j)^(1/2);
 end
 % Force Vector (Divided by exp(iwt))
-F = zeros(n+m, 1);
-F(1) = k*P_;
+F = zeros(n + m, 1);
+F(1) = k * P_;
 % Modal Displacement Transformation
-S = M_*P;
+S = M_ * P;
 % Modal Forcing (Divided by exp(iwt))
-f = P'*M_*F;
-% Excitation Frequency Limit
-w_e_max = max(w)*1.5;
+f = P' * M_ * F;
+% Excitation Frequency Limit-r \"${file}\"
+w_e_max = max(w) * 1.5;
 % Optimization Parameter Vector
 % [a, b, w_e, ca1, ca2]
 % Initial Value
@@ -194,11 +194,11 @@ x_c = @(x) [0, f_rms(n, m, na, [x(4); x(5)], x(1), x(2), m, K)];
 % Absorber Dampings
 ca = [x(1); x(2)];
 % Damping Matrix
-C = zeros(n+m);
+C = zeros(n + m);
 for j = 1:m
-    C(n+j, n+j) = ca(j);
-    C(n+j, na(j)) = -ca(j);
-    C(na(j), n+j) = -ca(j);
+    C(n + j, n + j) = ca(j);
+    C(n + j, na(j)) = -ca(j);
+    C(na(j), n + j) = -ca(j);
     C(na(j), na(j)) = ca(j);
 end
 
@@ -216,7 +216,7 @@ file.prmat("[-] M", M, "%7.1f");
 file.prmat("[-] K", K, "%7.1f");
 file.prmat("[-] M_", M_, "%7.1f");
 file.prmat("[-] K_", K_, "%7.1f");
-for j = 1:n+m
+for j = 1:n + m
     file.print("[*] w_%1.0f = %5.3f %5s", j, w(j), "rad/s");
     file.prvec(sprintf("[*] v_%1.0f", j), P(j, :), "%5.1f");
 end
@@ -230,30 +230,30 @@ file.prmat("[-] C", C, "%7.1f");
 % Transmissibility
 function T = f_T(n, a, b, w_e, w, f, S, P_)
     % Damping Ratios
-    z = w/a/2+w*b/2;
+    z = w / a / 2 + w * b / 2;
     % Maximum Last Disk Displacement (Divided by exp(iwt))
     % Normalized Excitation Frequencies
-    r = w_e./w;
+    r = w_e ./ w;
     % Modal Displacement Vector (Divided by exp(iwt))
-    R = (f./w.^2)./(((1-r.^2)./(2.*z.*r)).^2+1).^(1/2);
+    R = (f ./ w.^2) ./ (((1 - r.^2) ./ (2 .* z .* r)).^2 + 1).^(1/2);
     % Displacement Vector (Divided by exp(iwt))
-    T_ = S*R;
+    T_ = S * R;
     % Transmissibility
-    T = abs(T_(n))/P_;
+    T = abs(T_(n)) / P_;
 end
 
 % Root-Mean-Square Difference of Rayleigh Damping Approximation
 function rms = f_rms(n, m, na, ca, a, b, M, K)
     % Real Damping Matrix
-    C = zeros(n+m);
+    C = zeros(n + m);
     for j = 1:m
-        C(n+j, n+j) = ca(j);
-        C(n+j, na(j)) = -ca(j);
-        C(na(j), n+j) = -ca(j);
+        C(n + j, n + j) = ca(j);
+        C(n + j, na(j)) = -ca(j);
+        C(na(j), n + j) = -ca(j);
         C(na(j), na(j)) = ca(j);
     end
     % Rayleigh Damping Approximation
-    U = a*M+b*K;
+    U = a * M + b * K;
     % Root-Mean-Square Difference of Rayleigh Damping Approximation
-    rms = sqrt(sum(sum((C-U).^2)))/length(C);
+    rms = sqrt(sum(sum((C - U).^2))) / length(C);
 end
