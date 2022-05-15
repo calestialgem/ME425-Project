@@ -222,16 +222,18 @@ for na1 = 1:n - 1
         end
     end
 end
-% Inertia Matrix
-M = f_M(n, m, I, Ia);
-% Damping Matrix
-C = f_C(n, m, na, ca);
-% Stiffness Matrix
-K = f_K(n, m, k);
-% Natural Frequencies in rad/s
-w = f_w(n, m, M, K);
-% Plot
-plot_T_range(n, w, M, C, K, F, P_, 'Part D Transmissibility')
+if ~isinf(T_minimax)
+    % Inertia Matrix
+    M = f_M(n, m, I, Ia);
+    % Damping Matrix
+    C = f_C(n, m, na, ca);
+    % Stiffness Matrix
+    K = f_K(n, m, k);
+    % Natural Frequencies in rad/s
+    w = f_w(n, m, M, K);
+    % Plot
+    plot_T_range(n, w, M, C, K, F, P_, 'Part D Transmissibility')
+end
 % Elapsed Time
 c_elapsed = toc(c_start);
 
@@ -242,11 +244,15 @@ file.print("[-] Elapsed Time: %5.1f s", c_elapsed);
 file.prvec("[-] na", na, "%7.0f");
 file.prvec("[-] Ia", Ia, "%7.3f");
 file.prvec("[-] ca", ca, "%7.3f");
-file.prmat("[-] M", M, "%7.1f");
-file.prmat("[-] C", C, "%7.1f");
-file.prmat("[-] K", K, "%7.1f");
-for j = 1:n + m
-    file.print("[*] w_%1.0f = %5.3f %5s", j, w(j), "rad/s");
+if ~isinf(T_minimax)
+    file.prmat("[-] M", M, "%7.1f");
+    file.prmat("[-] C", C, "%7.1f");
+    file.prmat("[-] K", K, "%7.1f");
+    for j = 1:n + m
+        file.print("[*] w_%1.0f = %5.3f %5s", j, w(j), "rad/s");
+    end
+else
+    file.print("[!] Could not found even a single finite solution!");
 end
 
 % Inertia Matrix
@@ -329,7 +335,6 @@ function [Ia, ca, T_minimax] = f_T_minimax(n, m, na, u, I, k)
     x_options = optimoptions('fminimax');
     x_options.MaxIterations = 100;
     x_options.MaxFunctionEvaluations = 300;
-    x_options.Display = 'iter';
     % Optimization Results
     [x, ~, x_maxfval] = fminimax(x_f, x_0, [], [], x_Aeq, x_beq, x_lb, [], [], x_options);
     % Absorber Inertias
@@ -374,7 +379,7 @@ end
 % Plot Transmisibility Range
 function plot_T_range(n, w, M, C, K, F, P_, title)
     % Excitation Frequency Range
-    w_e_range = max(w) * (0:1.5e-3:1.5);
+    w_e_range = max(w) * (10.^(-1:0.01:log10(1.5)));
     % Transmissibility Range
     T_range = f_T_range(n, w_e_range, M, C, K, F, P_);
     % Plot
