@@ -125,18 +125,7 @@ for j = 1:m
     M(n + j, n + j) = Ia(j);
 end
 % Stiffness Matrix
-K = zeros(n + m);
-for j = 1:n
-    if j > 1
-        K(j, j - 1) = -k;
-    end
-    if j < n
-        K(j, j + 1) = -k;
-        K(j, j) = 2 * k;
-    else
-        K(j, j) = k;
-    end
-end
+K = f_K(n, m, k);
 % First Transformation
 M_ = M^(-1/2);
 K_ = M_ * K * M_;
@@ -216,6 +205,23 @@ function C = f_C(n, m, na, ca)
         C(n + j, na(j)) = -ca(j);
         C(na(j), n + j) = -ca(j);
         C(na(j), na(j)) = ca(j);
+    end
+end
+
+% Stiffness Matrix
+function K = f_K(n, m, k)
+    % Stiffness Matrix
+    K = zeros(n + m);
+    for j = 1:n
+        if j > 1
+            K(j, j - 1) = -k;
+        end
+        if j < n
+            K(j, j + 1) = -k;
+            K(j, j) = 2 * k;
+        else
+            K(j, j) = k;
+        end
     end
 end
 
