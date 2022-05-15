@@ -93,7 +93,7 @@ P_ = 1;
 F = zeros(n, 1);
 F(1) = k * P_;
 % Plot
-plot_T_range(n, w, M, f_C(n, 0, [], []), K, F, P_, 'Transmissibility')
+plot_T_range(n, w, M, f_C(n, 0, [], []), K, F, P_, 'Part B Transmissibility')
 % Elapsed Time
 c_elapsed = toc(c_start);
 
@@ -154,7 +154,7 @@ F(1) = k * P_;
 % [ca1, ca2]
 f_ca = @(x) [x(1); x(2)];
 % Initial Value
-x_0 = [10, 10];
+x_0 = [1, 1];
 % Lower Bound
 x_lb = [0, 0];
 % Optimized Function
@@ -169,6 +169,8 @@ x_options.MaxFunctionEvaluations = 1e6;
 ca = f_ca(x);
 % Damping Matrix
 C = f_C(n, m, na, ca);
+% Plot
+plot_T_range(n, w, M, C, K, F, P_, 'Part C Transmissibility')
 % Elapsed Time
 c_elapsed = toc(c_start);
 
@@ -258,8 +260,8 @@ function plot_T_range(n, w, M, C, K, F, P_, title)
     xlabel('\omega');
     ylabel('|\Theta_n/\Phi|');
     plot(w_e_range, T_range, 'LineWidth', 2);
-    for j = 1:n
-        xline(w(j), '--');
+    for w_j = w
+        xline(w_j, '--');
     end
     saveas(gcf, title, 'jpeg');
 end
