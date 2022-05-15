@@ -200,7 +200,7 @@ x_ub = [w_e_max, 100, 100];
 % Optimized Function
 x_f = @(x) f_T(n, m, na, [x(2); x(3)], w, x(1), M, K, f, S, P_);
 % Optimization Options
-x_options = optimoptions('fminimax', 'MaxIterations', 1e5, 'MaxFunctionEvaluations', 1e5);
+x_options = optimoptions('fminimax', 'MaxIterations', 1000, 'MaxFunctionEvaluations', 1000);
 % Optimization Results
 [x, ~, ~, flag] = fminimax(x_f, x_0, [], [], [], [], x_lb, x_ub, [], x_options);
 % Absorber Dampings
