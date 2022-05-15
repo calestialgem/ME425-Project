@@ -260,7 +260,7 @@ function z = f_z(n, m, na, ca, w, M, K)
         C(na(j), na(j)) = ca(j);
     end
     % Root-Mean-Square Difference of Rayleigh Damping Approximation
-    rms = @(a, b) sqrt(sum(sum((C - (a * M + b * K)).^2))) / (n * m);
+    rms = @(a, b) sqrt(sum(sum((C - (a * M + b * K)).^2)));
     % Optimization Parameter Vector
     % [a, b]
     % Initial Value
