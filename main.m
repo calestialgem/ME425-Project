@@ -104,7 +104,7 @@ for j = 1:length(w_e_range)
     % Displacement Vector (Divided by sin(wt))
     T_ = A \ F;
     % Transmissibility
-    T_range(j) = abs(T_(n)) / P_;
+    T_range(j) = abs(T_(n) / P_);
 end
 % Plot
 figure();
@@ -251,7 +251,7 @@ function T = f_T(n, w_e, M, C, K, F, P_)
     % Displacement Vector (Divided by sin(wt))
     T_ = A \ F;
     % Transmissibility
-    T = abs(T_(n)) / P_;
+    T = abs(T_(n) / P_);
 end
 
 % Damping Matrix
