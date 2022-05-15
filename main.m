@@ -207,6 +207,18 @@ file.prvec("[-] x", x, "%7.3f");
 file.prvec("[-] ca", ca, "%7.3f");
 file.prmat("[-] C", C, "%7.1f");
 
+% Damping Matrix
+function C = f_C(n, m, na, ca)
+    % Damping Matrix
+    C = zeros(n + m);
+    for j = 1:m
+        C(n + j, n + j) = ca(j);
+        C(n + j, na(j)) = -ca(j);
+        C(na(j), n + j) = -ca(j);
+        C(na(j), na(j)) = ca(j);
+    end
+end
+
 % Transmissibility Range for the Given Excitation Frequency Range
 function T_range = f_T_range(n, w_e_range, M, C, K, F, P_)
     % Transmissibility Range
@@ -217,18 +229,6 @@ function T_range = f_T_range(n, w_e_range, M, C, K, F, P_)
         if w_e ~= 0
             T_range(j) = f_T(n, w_e, M, C, K, F, P_);
         end
-    end
-end
-
-% Damping Matrix
-function C = f_C(n, m, na, ca)
-    % Damping Matrix
-    C = zeros(n + m);
-    for j = 1:m
-        C(n + j, n + j) = ca(j);
-        C(n + j, na(j)) = -ca(j);
-        C(na(j), n + j) = -ca(j);
-        C(na(j), na(j)) = ca(j);
     end
 end
 
@@ -247,10 +247,7 @@ function plot_T_range(n, w, M, C, K, F, P_, title)
     % Excitation Frequency Range
     w_e_range = max(w) * (0:1.5e-3:1.5);
     % Transmissibility Range
-    T_range = zeros(size(w_e_range));
-    for j = 1:length(w_e_range)
-        T_range(j) = f_T(n, w_e_range(j), M, C, K, F, P_);
-    end
+    T_range = f_T_range(n, w_e_range, M, C, K, F, P_);
     % Plot
     figure();
     set(gca, 'YScale', 'log');
