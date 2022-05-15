@@ -37,6 +37,8 @@ file.print("[-] %1s = %5.1f %0s", "k", k, "");
 
 % PART A ----------------------------------------------------------------------
 
+% Timer Start
+c_start = tic();
 % Inertia Matrix
 M = zeros(n);
 for j = 1:n
@@ -65,10 +67,13 @@ w = zeros(n, 1);
 for j = 1:n
     w(j) = L(j, j)^(1/2);
 end
+% Elapsed Time
+c_elapsed = toc(c_start);
 
 file.print("");
 file.print("Part A:");
 file.print("~~~~~~~");
+file.print("[-] Elapsed Time: %5.1f s", c_elapsed);
 file.prmat("[-] M", M, "%5.0f");
 file.prmat("[-] K", K, "%5.0f");
 file.prmat("[-] M_", M_, "%5.1f");
@@ -80,6 +85,8 @@ end
 
 % PART B ----------------------------------------------------------------------
 
+% Timer Start
+c_start = tic();
 % Base Excitation (Divided by exp(iwt))
 P_ = 1;
 % Force Vector (Divided by exp(iwt))
@@ -103,7 +110,7 @@ for j = 1:length(w_e_range)
     T_ = S * R;
     T_n_range(j) = T_(n);
 end
-
+% Plot
 figure();
 set(gca, 'YScale', 'log');
 set(gca, 'XScale', 'log');
@@ -116,10 +123,13 @@ for j = 1:n
     xline(w(j), '--');
 end
 saveas(gcf, 'Transmissibility', 'jpeg');
+% Elapsed Time
+c_elapsed = toc(c_start);
 
 file.print("");
 file.print("Part B:");
 file.print("~~~~~~~");
+file.print("[-] Elapsed Time: %5.1f s", c_elapsed);
 file.print("[-] %2s = %5.3f %0s", "P_", P_, "");
 file.prvec("[-] F", F, "%7.2f");
 file.prvec("[-] f", f, "%7.2f");
@@ -127,6 +137,8 @@ file.prmat("[-] S", S, "%7.2f");
 
 % PART C ----------------------------------------------------------------------
 
+% Timer Start
+c_start = tic();
 % Number of Absorbers
 m = 2;
 % Absorber Inertias
@@ -201,10 +213,13 @@ for j = 1:m
     C(na(j), n + j) = -ca(j);
     C(na(j), na(j)) = ca(j);
 end
+% Elapsed Time
+c_elapsed = toc(c_start);
 
 file.print("");
 file.print("Part C:");
 file.print("~~~~~~~");
+file.print("[-] Elapsed Time: %5.1f s", c_elapsed);
 if flag == 0
     file.print("[!] Number of iterations exceeded options.MaxIterations or the number of function evaluations exceeded options.MaxFunctionEvaluations!");
 elseif flag == 4

@@ -13,6 +13,7 @@ Initial Caclculations:
 
 Part A:
 ~~~~~~~
+[-] Elapsed Time:   0.0 s
 [-] M [5, 5]: 
    20    0    0    0    0
     0   20    0    0    0
@@ -50,6 +51,7 @@ Part A:
 
 Part B:
 ~~~~~~~
+[-] Elapsed Time:   0.5 s
 [-] P_ = 1.000 
 [-] F [5]:  125.00   0.00   0.00   0.00   0.00
 [-] f [5]:    4.75 -12.74  16.68  15.33  -9.11
@@ -62,6 +64,7 @@ Part B:
 
 Part C:
 ~~~~~~~
+[-] Elapsed Time:   4.9 s
 [!] Number of iterations exceeded options.MaxIterations or the number of function evaluations exceeded options.MaxFunctionEvaluations!
 [-] Ia [2]:   0.100  0.100
 [-] na [2]:       1      5
