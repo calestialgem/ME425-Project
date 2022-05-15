@@ -51,11 +51,11 @@ Part A:
 
 Part B:
 ~~~~~~~
-[-] Elapsed Time:   0.5 s
+[-] Elapsed Time:   1.2 s
 
 Part C:
 ~~~~~~~
-[-] Elapsed Time:   0.6 s
+[-] Elapsed Time:   1.0 s
 [!] Magnitude of the search direction was less than the specified tolerance, and the constraint violation was less than options.ConstraintTolerance!
 [?] Optimizer Output: 
 Local minimum possible. Constraints satisfied.

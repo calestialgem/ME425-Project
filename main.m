@@ -190,6 +190,65 @@ file.prvec("[-] x", x, "%7.3f");
 file.prvec("[-] ca", ca, "%7.3f");
 file.prmat("[-] C", C, "%7.1f");
 
+% PART D ----------------------------------------------------------------------
+
+% Timer Start
+c_start = tic();
+% Number of Absorbers
+m = 2;
+% Absorber Positions (Assumed to be unique for each absorber.)
+na = zeros(m, 1);
+% Absorber Inertias
+Ia = zeros(m, 1);
+% Absorber Dampings
+ca = zeros(m, 1);
+% Minimum Maximum Transmissibility
+T_minimax = Inf;
+% For all possible combinations...
+for na1 = 1:n - 1
+    for na2 = na1 + 1:n
+        % Absorber Positions (Assumed to be unique for each absorber.)
+        na_j = zeros(m, 1);
+        na_j(1) = na1;
+        na_j(2) = na2;
+        % Optimize
+        [Ia_j, ca_j, T_minimax_j] = f_T_minimax(n, m, na_j, u, I, k);
+        % ... replace if better.
+        if T_minimax > T_minimax_j
+            na = na_j;
+            Ia = Ia_j;
+            ca = ca_j;
+            T_minimax = T_minimax_j;
+        end
+    end
+end
+% Inertia Matrix
+M = f_M(n, m, I, Ia);
+% Damping Matrix
+C = f_C(n, m, na, ca);
+% Stiffness Matrix
+K = f_K(n, m, k);
+% Natural Frequencies in rad/s
+w = f_w(n, m, M, K);
+% Plot
+plot_T_range(n, w, M, C, K, F, P_, 'Part D Transmissibility')
+% Elapsed Time
+c_elapsed = toc(c_start);
+
+file.print("");
+file.print("Part D:");
+file.print("~~~~~~~");
+file.print("[-] Elapsed Time: %5.1f s", c_elapsed);
+file.prvec("[-] na", na, "%7.0f");
+file.prvec("[-] Ia", Ia, "%7.3f");
+file.prvec("[-] ca", ca, "%7.3f");
+file.prmat("[-] M", M, "%7.1f");
+file.prmat("[-] C", C, "%7.1f");
+file.prmat("[-] K", K, "%7.1f");
+for j = 1:n + m
+    file.print("[*] w_%1.0f = %5.3f %5s", j, w(j), "rad/s");
+end
+
 % Inertia Matrix
 function M = f_M(n, m, I, Ia)
     % Inertia Matrix
@@ -229,6 +288,64 @@ function K = f_K(n, m, k)
             K(j, j) = k;
         end
     end
+end
+
+% Natural Frequencies in rad/s
+function w = f_w(n, m, M, K)
+    % First Transformation
+    M_ = M^(-1/2);
+    K_ = M_ * K * M_;
+    % Eigenvector and Eigenvalue Matrix
+    [~, L] = eig(K_);
+    % Natural Frequencies in rad/s
+    w = zeros(n + m, 1);
+    for j = 1:n + m
+        w(j) = L(j, j)^(1/2);
+    end
+end
+
+function [Ia, ca, T_minimax] = f_T_minimax(n, m, na, u, I, k)
+    % Stiffness Matrix
+    K = f_K(n, m, k);
+    % Base Excitation (Divided by sin(wt))
+    P_ = 1;
+    % Force Vector (Divided by sin(wt))
+    F = zeros(n + m, 1);
+    F(1) = k * P_;
+    % Optimization Parameter Vector
+    % [Ia1, Ia2, ca1, ca2]
+    f_Ia = @(x) [x(1); x(2)];
+    f_ca = @(x) [x(3); x(4)];
+    % Initial Value
+    x_0 = [u / 2, u / 2, 1, 1];
+    % Lower Bound
+    x_lb = [0, 0, 0, 0];
+    % Optimized Function
+    x_f = @(x) f_T_partd(n, m, na, f_Ia(x), f_ca(x), I, K, F, P_);
+    % Linear Equality Constraint
+    x_Aeq = [1, 1, 0, 0];
+    x_beq = u;
+    % Optimization Options
+    x_options = optimoptions('fminimax');
+    x_options.MaxIterations = 100;
+    x_options.MaxFunctionEvaluations = 300;
+    x_options.Display = 'iter';
+    % Optimization Results
+    [x, ~, x_maxfval] = fminimax(x_f, x_0, [], [], x_Aeq, x_beq, x_lb, [], [], x_options);
+    % Absorber Inertias
+    Ia = f_Ia(x);
+    % Absorber Dampings
+    ca = f_ca(x);
+    % Minimized Maximum Transmissibility
+    T_minimax = x_maxfval;
+end
+
+% Transmissibility Range Part D
+function T_partd = f_T_partd(n, m, na, Ia, ca, I, K, F, P_)
+    M = f_M(n, m, I, Ia);
+    C = f_C(n, m, na, ca);
+    w = f_w(n, m, M, K);
+    T_partd = f_T_range(n, w, M, C, K, F, P_);
 end
 
 % Transmissibility Range for the Given Excitation Frequency Range
