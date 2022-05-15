@@ -117,13 +117,7 @@ na = zeros(m, 1);
 na(1) = 1;
 na(2) = n;
 % Inertia Matrix
-M = zeros(n + m);
-for j = 1:n
-    M(j, j) = I;
-end
-for j = 1:m
-    M(n + j, n + j) = Ia(j);
-end
+M = f_M(n, m, I, Ia);
 % Stiffness Matrix
 K = f_K(n, m, k);
 % First Transformation
@@ -195,6 +189,18 @@ file.prvec("[-] x_0", x_0, "%7.3f");
 file.prvec("[-] x", x, "%7.3f");
 file.prvec("[-] ca", ca, "%7.3f");
 file.prmat("[-] C", C, "%7.1f");
+
+% Inertia Matrix
+function M = f_M(n, m, I, Ia)
+    % Inertia Matrix
+    M = zeros(n + m);
+    for j = 1:n
+        M(j, j) = I;
+    end
+    for j = 1:m
+        M(n + j, n + j) = Ia(j);
+    end
+end
 
 % Damping Matrix
 function C = f_C(n, m, na, ca)
