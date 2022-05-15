@@ -187,7 +187,7 @@ F(1) = k * P_;
 S = M_ * P;
 % Modal Forcing (Divided by exp(iwt))
 f = P' * M_ * F;
-% Excitation Frequency Limit-r \"${file}\"
+% Excitation Frequency Limit
 w_e_max = max(w) * 1.5;
 % Optimization Parameter Vector
 % [w_e, ca1, ca2]
