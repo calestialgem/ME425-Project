@@ -188,13 +188,13 @@ w_e_max = max(w) * 1.5;
 % Optimization Parameter Vector
 % [ca1, ca2]
 % Initial Value
-x_0 = [40, 10];
+x_0 = [8, 5];
 % Optimized Function
 x_f = @(x) f_T_max(n, m, na, [x(1); x(2)], w_e_max, M, K, F, P_);
 % Optimization Options
 x_options = optimset('fminsearch');
-x_options.MaxIterations = 2000;
-x_options.MaxFunctionEvaluations = 2000;
+x_options.MaxIterations = 2e3;
+x_options.MaxFunctionEvaluations = 1e6;
 x_options.Display = 'iter';
 % Optimization Results
 [x, ~, x_flag, x_output] = fminsearch(x_f, x_0, x_options);
@@ -240,35 +240,7 @@ file.prmat("[-] C", C, "%7.1f");
 
 % Maximum Transmissibility in the Excitation Frequency Range
 function T_max = f_T_max(n, m, na, ca, w_e_max, M, K, F, P_)
-    % Damping Ratios
-    [a, b] = f_a_b(n, m, na, ca, M, K);
-    % Optimization Parameter Vector
-    % [w_e]
-    % Lower Bound
-    x_1 = 0;
-    % Upper Bound
-    x_2 = w_e_max;
-    % Optimized Function
-    x_f = @(x) -f_T(n, a, b, x, M, K, F, P_);
-    % Optimization Results
-    [~, x_fval] = fminbnd(x_f, x_1, x_2);
-    % Maximum Transmissibility
-    T_max = -x_fval;
-end
-
-% Transmissibility for the Given Excitation Frequency
-function T = f_T(n, a, b, w_e, M, K, F, P_)
-    % Left Hand Side Matrix After sin(wt) is Cancelled
-    A = -w_e^2 * M + w_e * (a * M + b * K) + K;
-    % Displacement Vector (Divided by sin(wt))
-    T_ = A \ F;
-    % Transmissibility
-    T = abs(T_(n)) / P_;
-end
-
-% Rayleigh Damping Approximation
-function [a, b] = f_a_b(n, m, na, ca, M, K)
-    % Real Damping Matrix
+    % Damping Matrix
     C = zeros(n + m);
     for j = 1:m
         C(n + j, n + j) = ca(j);
@@ -276,17 +248,26 @@ function [a, b] = f_a_b(n, m, na, ca, M, K)
         C(na(j), n + j) = -ca(j);
         C(na(j), na(j)) = ca(j);
     end
-    % Root-Mean-Square Difference of Rayleigh Damping Approximation
-    rms = @(a, b) sqrt(sum(sum((C - (a * M + b * K)).^2)));
     % Optimization Parameter Vector
-    % [a, b]
-    % Initial Value
-    x_0 = [0.5, 0.1];
+    % [w_e]
+    % Lower Bound
+    x_1 = 0;
+    % Upper Bound
+    x_2 = w_e_max;
     % Optimized Function
-    x_f = @(x) rms(x(1), x(2));
+    x_f = @(x) -f_T(n, x, M, C, K, F, P_);
     % Optimization Results
-    x = fminsearch(x_f, x_0);
-    % Rayleigh Damping
-    a = x(1);
-    b = x(2);
+    [~, x_fval] = fminbnd(x_f, x_1, x_2);
+    % Maximum Transmissibility
+    T_max = -x_fval;
+end
+
+% Transmissibility for the Given Excitation Frequency
+function T = f_T(n, w_e, M, C, K, F, P_)
+    % Left Hand Side Matrix After sin(wt) is Cancelled
+    A = -w_e^2 * M + w_e * C + K;
+    % Displacement Vector (Divided by sin(wt))
+    T_ = A \ F;
+    % Transmissibility
+    T = abs(T_(n)) / P_;
 end
