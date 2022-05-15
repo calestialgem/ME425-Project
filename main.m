@@ -92,33 +92,8 @@ P_ = 1;
 % Force Vector (Divided by sin(wt))
 F = zeros(n, 1);
 F(1) = k * P_;
-% Excitation Frequency Range
-w_e_range = max(w) * (0:1.5e-3:1.5);
-% Transmissibility Range
-T_range = zeros(size(w_e_range));
-for j = 1:length(w_e_range)
-    % Base Excitation Frequency
-    w_e = w_e_range(j);
-    % Left Hand Side Matrix After sin(wt) is Cancelled
-    A = -w_e^2 * M + K;
-    % Displacement Vector (Divided by sin(wt))
-    T_ = A \ F;
-    % Transmissibility
-    T_range(j) = abs(T_(n) / P_);
-end
 % Plot
-figure();
-set(gca, 'YScale', 'log');
-set(gca, 'XScale', 'log');
-hold('on');
-grid('on');
-xlabel('\omega');
-ylabel('|\Theta_n/\Phi|');
-plot(w_e_range, T_range, 'LineWidth', 2);
-for j = 1:n
-    xline(w(j), '--');
-end
-saveas(gcf, 'Transmissibility', 'jpeg');
+plot_T_range(n, w, M, f_C(n, 0, [], []), K, F, P_, 'Transmissibility')
 % Elapsed Time
 c_elapsed = toc(c_start);
 
@@ -126,8 +101,6 @@ file.print("");
 file.print("Part B:");
 file.print("~~~~~~~");
 file.print("[-] Elapsed Time: %5.1f s", c_elapsed);
-file.print("[-] %2s = %5.3f %0s", "P_", P_, "");
-file.prvec("[-] F", F, "%7.2f");
 
 % PART C ----------------------------------------------------------------------
 
@@ -183,9 +156,7 @@ f_ca = @(x) [x(1); x(2)];
 % Initial Value
 x_0 = [10, 10];
 % Lower Bound
-x_lb = [0.1, 0.1];
-% Upper Bound
-x_ub = [1000, 1000];
+x_lb = [0, 0];
 % Optimized Function
 x_f = @(x) f_T_range(n, w, M, f_C(n, m, na, f_ca(x)), K, F, P_);
 % Optimization Options
@@ -193,7 +164,7 @@ x_options = optimoptions('fminimax');
 x_options.MaxIterations = 2e3;
 x_options.MaxFunctionEvaluations = 1e6;
 % Optimization Results
-[x, ~, ~, x_flag, x_output] = fminimax(x_f, x_0, [], [], [], [], x_lb, x_ub, [], x_options);
+[x, ~, ~, x_flag, x_output] = fminimax(x_f, x_0, [], [], [], [], x_lb, [], [], x_options);
 % Absorber Dampings
 ca = f_ca(x);
 % Damping Matrix
@@ -238,15 +209,12 @@ file.prmat("[-] C", C, "%7.1f");
 function T_range = f_T_range(n, w_e_range, M, C, K, F, P_)
     % Transmissibility Range
     T_range = zeros(size(w_e_range));
-    for j = 1:n
+    for j = 1:length(w_e_range)
         % Base Excitation Frequency
-        w_e = w_e_range(n);
-        % Left Hand Side Matrix After sin(wt) is Cancelled
-        A = -w_e^2 * M + w_e * C + K;
-        % Displacement Vector (Divided by sin(wt))
-        T_ = A \ F;
-        % Transmissibility
-        T_range(j) = abs(T_(n) / P_);
+        w_e = w_e_range(j);
+        if w_e ~= 0
+            T_range(j) = f_T(n, w_e, M, C, K, F, P_);
+        end
     end
 end
 
@@ -260,4 +228,38 @@ function C = f_C(n, m, na, ca)
         C(na(j), n + j) = -ca(j);
         C(na(j), na(j)) = ca(j);
     end
+end
+
+% Transmissibility
+function T = f_T(n, w_e, M, C, K, F, P_)
+    % Left Hand Side Matrix After sin(wt) is Cancelled
+    A = -w_e^2 * M + w_e * C + K;
+    % Displacement Vector (Divided by sin(wt))
+    T_ = A \ F;
+    % Transmissibility
+    T = abs(T_(n) / P_);
+end
+
+% Plot Transmisibility Range
+function plot_T_range(n, w, M, C, K, F, P_, title)
+    % Excitation Frequency Range
+    w_e_range = max(w) * (0:1.5e-3:1.5);
+    % Transmissibility Range
+    T_range = zeros(size(w_e_range));
+    for j = 1:length(w_e_range)
+        T_range(j) = f_T(n, w_e_range(j), M, C, K, F, P_);
+    end
+    % Plot
+    figure();
+    set(gca, 'YScale', 'log');
+    set(gca, 'XScale', 'log');
+    hold('on');
+    grid('on');
+    xlabel('\omega');
+    ylabel('|\Theta_n/\Phi|');
+    plot(w_e_range, T_range, 'LineWidth', 2);
+    for j = 1:n
+        xline(w(j), '--');
+    end
+    saveas(gcf, title, 'jpeg');
 end
