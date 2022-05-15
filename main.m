@@ -178,23 +178,21 @@ f = P' * M_ * F;
 % Excitation Frequency Limit-r \"${file}\"
 w_e_max = max(w) * 1.5;
 % Optimization Parameter Vector
-% [a, b, w_e, ca1, ca2]
+% [w_e, ca1, ca2]
 % Initial Value
-x_0 = [0.5, 0.01, max(w), 40, 10];
+x_0 = [max(w), 40, 10];
 % Lower Bound
-x_lb = [0, 0, 0, 0.1, 0.1];
+x_lb = [0, 0.1, 0.1];
 % Upper Bound
-x_ub = [100, 100, w_e_max, 100, 100];
+x_ub = [w_e_max, 100, 100];
 % Optimized Function
-x_f = @(x) f_T(n, x(1), x(2), x(3), w, f, S, P_);
-% Nonlinear Constraint Function
-x_c = @(x) f_rms(n, m, na, [x(4); x(5)], x(1), x(2), M, K);
+x_f = @(x) f_T(n, m, na, [x(2); x(3)], w, x(1), M, K, f, S, P_);
 % Optimization Options
 x_options = optimoptions('fminimax', 'MaxIterations', 1e4, 'MaxFunctionEvaluations', 1e4);
 % Optimization Results
-[x, ~, ~, flag] = fminimax(x_f, x_0, [], [], [], [], x_lb, x_ub, x_c, x_options);
+[x, ~, ~, flag] = fminimax(x_f, x_0, [], [], [], [], x_lb, x_ub, [], x_options);
 % Absorber Dampings
-ca = [x(1); x(2)];
+ca = [x(2); x(3)];
 % Damping Matrix
 C = zeros(n + m);
 for j = 1:m
@@ -238,9 +236,9 @@ file.prvec("[-] ca", ca, "%7.3f");
 file.prmat("[-] C", C, "%7.1f");
 
 % Transmissibility
-function T = f_T(n, a, b, w_e, w, f, S, P_)
+function T = f_T(n, m, na, ca, w, w_e, M, K, f, S, P_)
     % Damping Ratios
-    z = w / a / 2 + w * b / 2;
+    z = f_z(n, m, na, ca, w, M, K);
     % Maximum Last Disk Displacement (Divided by exp(iwt))
     % Normalized Excitation Frequencies
     r = w_e ./ w;
@@ -252,8 +250,8 @@ function T = f_T(n, a, b, w_e, w, f, S, P_)
     T = abs(T_(n)) / P_;
 end
 
-% Root-Mean-Square Difference of Rayleigh Damping Approximation
-function [c, ceq] = f_rms(n, m, na, ca, a, b, M, K)
+% Rayleigh Damping Approximation
+function z = f_z(n, m, na, ca, w, M, K)
     % Real Damping Matrix
     C = zeros(n + m);
     for j = 1:m
@@ -262,12 +260,19 @@ function [c, ceq] = f_rms(n, m, na, ca, a, b, M, K)
         C(na(j), n + j) = -ca(j);
         C(na(j), na(j)) = ca(j);
     end
-    % Rayleigh Damping Approximation
-    U = a * M + b * K;
     % Root-Mean-Square Difference of Rayleigh Damping Approximation
-    rms = sqrt(sum(sum((C - U).^2))) / (n * m) / (max(ca) - min(ca));
-    % Nonequality constraint is such that the rms will be small.
-    c = rms - 0.01; % Less than 1 %.
-    % Do not use equality constraint.
-    ceq = [];
+    rms = @(a, b) sqrt(sum(sum((C - (a * M + b * K)).^2))) / (n * m);
+    % Optimization Parameter Vector
+    % [a, b]
+    % Initial Value
+    x_0 = [0.5, 0.1];
+    % Optimized Function
+    x_f = @(x) rms(x(1), x(2));
+    % Optimization Results
+    x = fminsearch(x_f, x_0);
+    % Rayleigh Damping
+    a = x(1);
+    b = x(2);
+    % Damping Ratios
+    z = w / a / 2 + w * b / 2;
 end
