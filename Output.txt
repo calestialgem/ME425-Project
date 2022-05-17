@@ -4,7 +4,7 @@ me425 spring2022 prj
 Input:
 ~~~~~~
 [-] n =    5 
-[-] u = 0.30 
+[-] u = 0.20 
 
 Initial Caclculations:
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -13,7 +13,7 @@ Initial Caclculations:
 
 Part A:
 ~~~~~~~
-[-] Elapsed Time:   0.0 s
+[-] Elapsed Time:   0.1 s
 [-] M [5, 5]: 
    20    0    0    0    0
     0   20    0    0    0
@@ -51,11 +51,11 @@ Part A:
 
 Part B:
 ~~~~~~~
-[-] Elapsed Time:   1.2 s
+[-] Elapsed Time:   3.7 s
 
 Part C:
 ~~~~~~~
-[-] Elapsed Time:   0.6 s
+[-] Elapsed Time:   2.5 s
 [!] Magnitude of the search direction was less than the specified tolerance, and the constraint violation was less than options.ConstraintTolerance!
 [?] Optimizer Output: 
 Local minimum possible. Constraints satisfied.
@@ -66,10 +66,10 @@ satisfied to within the value of the constraint tolerance.
 
 <stopping criteria details>
 
-Optimization stopped because the norm of the current search direction, 3.050647e-08,
+Optimization stopped because the norm of the current search direction, 1.640664e-07,
 is less than 2*options.StepTolerance = 1.000000e-06, and the maximum constraint 
-violation, 2.634406e-08, is less than options.ConstraintTolerance = 1.000000e-06.
-[-] Ia [2]:   0.150  0.150
+violation, 1.414693e-07, is less than options.ConstraintTolerance = 1.000000e-06.
+[-] Ia [2]:   0.100  0.100
 [-] na [2]:       1      5
 [-] M [7, 7]: 
    20.0    0.0    0.0    0.0    0.0    0.0    0.0
@@ -93,8 +93,8 @@ violation, 2.634406e-08, is less than options.ConstraintTolerance = 1.000000e-06
     0.0    0.0    0.2    0.0    0.0    0.0    0.0
     0.0    0.0    0.0    0.2    0.0    0.0    0.0
     0.0    0.0    0.0    0.0    0.2    0.0    0.0
-    0.0    0.0    0.0    0.0    0.0    2.6    0.0
-    0.0    0.0    0.0    0.0    0.0    0.0    2.6
+    0.0    0.0    0.0    0.0    0.0    3.2    0.0
+    0.0    0.0    0.0    0.0    0.0    0.0    3.2
 [-] K_ [7, 7]: 
    12.5   -6.2    0.0    0.0    0.0    0.0    0.0
    -6.2   12.5   -6.2    0.0    0.0    0.0    0.0
@@ -118,20 +118,20 @@ violation, 2.634406e-08, is less than options.ConstraintTolerance = 1.000000e-06
 [*] w_7 = 4.797 rad/s
 [*] v_7 [7]:   0.0  1.0  0.0  0.0  0.0  0.0 -0.0
 [-] x_0 [2]:   1.000  1.000
-[-] x [2]:   0.344  0.112
-[-] ca [2]:   0.344  0.112
+[-] x [2]:   0.229  0.075
+[-] ca [2]:   0.229  0.075
 [-] C [7, 7]: 
-    0.3    0.0    0.0    0.0    0.0   -0.3    0.0
+    0.2    0.0    0.0    0.0    0.0   -0.2    0.0
     0.0    0.0    0.0    0.0    0.0    0.0    0.0
     0.0    0.0    0.0    0.0    0.0    0.0    0.0
     0.0    0.0    0.0    0.0    0.0    0.0    0.0
     0.0    0.0    0.0    0.0    0.1    0.0   -0.1
-   -0.3    0.0    0.0    0.0    0.0    0.3    0.0
+   -0.2    0.0    0.0    0.0    0.0    0.2    0.0
     0.0    0.0    0.0    0.0   -0.1    0.0    0.1
 
 Part D:
 ~~~~~~~
-[-] Elapsed Time:  29.0 s
+[-] Elapsed Time:  30.1 s
 [-] na [2]:       0      0
 [-] Ia [2]:   0.000  0.000
 [-] ca [2]:   0.000  0.000

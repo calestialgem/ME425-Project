@@ -87,13 +87,15 @@ end
 
 % Timer Start
 c_start = tic();
+% Excitation Frequency Range
+w_e_range = max(w) * (10.^(-1:0.01:log10(1.5)));
 % Base Excitation (Divided by sin(wt))
 P_ = 1;
 % Force Vector (Divided by sin(wt))
 F = zeros(n, 1);
 F(1) = k * P_;
 % Plot
-plot_T_range(n, w, M, f_C(n, 0, [], []), K, F, P_, 'Part B Transmissibility')
+plot_T_range(n, w_e_range, M, f_C(n, 0, [], []), K, F, P_, 'Part B Transmissibility')
 % Elapsed Time
 c_elapsed = toc(c_start);
 
@@ -153,7 +155,7 @@ ca = f_ca(x);
 % Damping Matrix
 C = f_C(n, m, na, ca);
 % Plot
-plot_T_range(n, w, M, C, K, F, P_, 'Part C Transmissibility')
+plot_T_range(n, w_e_range, M, C, K, F, P_, 'Part C Transmissibility')
 % Elapsed Time
 c_elapsed = toc(c_start);
 
@@ -232,7 +234,7 @@ if ~isinf(T_minimax)
     % Natural Frequencies in rad/s
     w = f_w(n, m, M, K);
     % Plot
-    plot_T_range(n, w, M, C, K, F, P_, 'Part D Transmissibility')
+    plot_T_range(n, w_e_range, M, C, K, F, P_, 'Part D Transmissibility')
 end
 % Elapsed Time
 c_elapsed = toc(c_start);
@@ -377,9 +379,7 @@ function T = f_T(n, w_e, M, C, K, F, P_)
 end
 
 % Plot Transmisibility Range
-function plot_T_range(n, w, M, C, K, F, P_, title)
-    % Excitation Frequency Range
-    w_e_range = max(w) * (10.^(-1:0.01:log10(1.5)));
+function plot_T_range(n, w_e_range, M, C, K, F, P_, title)
     % Transmissibility Range
     T_range = f_T_range(n, w_e_range, M, C, K, F, P_);
     % Plot
@@ -391,8 +391,5 @@ function plot_T_range(n, w, M, C, K, F, P_, title)
     xlabel('\omega');
     ylabel('|\Theta_n/\Phi|');
     plot(w_e_range, T_range, 'LineWidth', 2);
-    for w_j = w
-        xline(w_j, '--');
-    end
     saveas(gcf, title, 'jpeg');
 end
