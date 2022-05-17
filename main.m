@@ -95,7 +95,7 @@ P_ = 1;
 F = zeros(n, 1);
 F(1) = k * P_;
 % Plot
-plot_T_range(n, w_e_range, M, f_C(n, 0, [], []), K, F, P_, 'Part B Transmissibility')
+plot_T_range(n, w_e_range, M, f_C(n, 0, [], []), K, F, P_, 'Part B Transmissibility');
 % Elapsed Time
 c_elapsed = toc(c_start);
 
@@ -122,16 +122,6 @@ na(2) = n;
 M = f_M(n, m, I, Ia);
 % Stiffness Matrix
 K = f_K(n, m, k);
-% First Transformation
-M_ = M^(-1/2);
-K_ = M_ * K * M_;
-% Eigenvector and Eigenvalue Matrix
-[P, L] = eig(K_);
-% Natural Frequencies in rad/s
-w = zeros(n + m, 1);
-for j = 1:n + m
-    w(j) = L(j, j)^(1/2);
-end
 % Force Vector (Divided by sin(wt))
 F = zeros(n + m, 1);
 F(1) = k * P_;
@@ -143,7 +133,7 @@ x_0 = [1, 1];
 % Lower Bound
 x_lb = [0, 0];
 % Optimized Function
-x_f = @(x) f_T_range(n, w, M, f_C(n, m, na, f_ca(x)), K, F, P_);
+x_f = @(x) f_T_range(n, w_e_range, M, f_C(n, m, na, f_ca(x)), K, F, P_);
 % Optimization Options
 x_options = optimoptions('fminimax');
 x_options.MaxIterations = 2e3;
@@ -155,7 +145,7 @@ ca = f_ca(x);
 % Damping Matrix
 C = f_C(n, m, na, ca);
 % Plot
-plot_T_range(n, w_e_range, M, C, K, F, P_, 'Part C Transmissibility')
+plot_T_range(n, w_e_range, M, C, K, F, P_, 'Part C Transmissibility');
 % Elapsed Time
 c_elapsed = toc(c_start);
 
@@ -181,12 +171,6 @@ file.prvec("[-] Ia", Ia, "%7.3f");
 file.prvec("[-] na", na, "%7.0f");
 file.prmat("[-] M", M, "%7.1f");
 file.prmat("[-] K", K, "%7.1f");
-file.prmat("[-] M_", M_, "%7.1f");
-file.prmat("[-] K_", K_, "%7.1f");
-for j = 1:n + m
-    file.print("[*] w_%1.0f = %5.3f %5s", j, w(j), "rad/s");
-    file.prvec(sprintf("[*] v_%1.0f", j), P(j, :), "%5.1f");
-end
 file.prvec("[-] x_0", x_0, "%7.3f");
 file.prvec("[-] x", x, "%7.3f");
 file.prvec("[-] ca", ca, "%7.3f");
@@ -234,7 +218,7 @@ if ~isinf(T_minimax)
     % Natural Frequencies in rad/s
     w = f_w(n, m, M, K);
     % Plot
-    plot_T_range(n, w_e_range, M, C, K, F, P_, 'Part D Transmissibility')
+    plot_T_range(n, w_e_range, M, C, K, F, P_, 'Part D Transmissibility');
 end
 % Elapsed Time
 c_elapsed = toc(c_start);
