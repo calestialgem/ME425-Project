@@ -88,7 +88,7 @@ end
 % Timer Start
 c_start = tic();
 % Excitation Frequency Range
-w_e_range = max(w) * (10.^(-1:0.01:log10(1.5)));
+w_e_range = max(w) * (10.^(-1:0.001:log10(1.5)));
 % Base Excitation (Divided by sin(wt))
 P_ = 1;
 % Force Vector (Divided by sin(wt))

@@ -13,7 +13,7 @@ Initial Caclculations:
 
 Part A:
 ~~~~~~~
-[-] Elapsed Time:   0.1 s
+[-] Elapsed Time:   0.0 s
 [-] M [5, 5]: 
    20    0    0    0    0
     0   20    0    0    0
@@ -51,11 +51,11 @@ Part A:
 
 Part B:
 ~~~~~~~
-[-] Elapsed Time:   3.7 s
+[-] Elapsed Time:   0.7 s
 
 Part C:
 ~~~~~~~
-[-] Elapsed Time:   2.5 s
+[-] Elapsed Time:   0.7 s
 [!] Magnitude of the search direction was less than the specified tolerance, and the constraint violation was less than options.ConstraintTolerance!
 [?] Optimizer Output: 
 Local minimum possible. Constraints satisfied.
@@ -131,7 +131,7 @@ violation, 1.414693e-07, is less than options.ConstraintTolerance = 1.000000e-06
 
 Part D:
 ~~~~~~~
-[-] Elapsed Time:  30.1 s
+[-] Elapsed Time:  28.2 s
 [-] na [2]:       0      0
 [-] Ia [2]:   0.000  0.000
 [-] ca [2]:   0.000  0.000
