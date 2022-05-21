@@ -314,19 +314,29 @@ function [Ia, ca, T_minimax] = f_T_minimax(n, w_e_max, m, na, u, I, k)
     T_minimax = x_maxfval;
 end
 
-function T_max = f_T_max(n, w_e_max, M, C, K, F, P_)
-    % Optimization Parameter Vector
-    % [w_e]
-    % Lower Bound
-    x_1 = 0;
-    % Upper Bound
-    x_2 = w_e_max;
-    % Optimized Function
-    x_f = @(x) -f_T(n, x, M, C, K, F, P_);
-    % Optimization Results
-    [~, x_fval] = fminbnd(x_f, x_1, x_2);
-    % Maximum Transmissibility
-    T_max = -x_fval;
+function T_max_range = f_T_max(n, w_e_max, M, C, K, F, P_)
+    % Different Local Maximum Transmissibilities
+    T_max_range = zeros(1, n);
+    % Step Size in Frequency
+    w_e_step = w_e_max / length(T_max_range);
+    % Frequency Range Start
+    w_e_start = 0;
+    for k = 1:length(T_max_range)
+        % Optimization Parameter Vector
+        % [w_e]
+        % Lower Bound
+        x_1 = w_e_start;
+        % Upper Bound
+        x_2 = w_e_start + w_e_step;
+        % Optimized Function
+        x_f = @(x) -f_T(n, x, M, C, K, F, P_);
+        % Optimization Results
+        [~, x_fval] = fminbnd(x_f, x_1, x_2);
+        % Maximum Transmissibility
+        T_max_range(k) = -x_fval;
+        % Next Range
+        w_e_start = w_e_start + w_e_step;
+    end
 end
 
 % Transmissibility
