@@ -51,11 +51,11 @@ Part A:
 
 Part B:
 ~~~~~~~
-[-] Elapsed Time:   0.6 s
+[-] Elapsed Time:   0.4 s
 
 Part C:
 ~~~~~~~
-[-] Elapsed Time:  35.1 s
+[-] Elapsed Time:   0.5 s
 [!] Magnitude of the search direction was less than the specified tolerance, and the constraint violation was less than options.ConstraintTolerance!
 [?] Optimizer Output: 
 Local minimum possible. Constraints satisfied.
@@ -66,9 +66,9 @@ satisfied to within the value of the constraint tolerance.
 
 <stopping criteria details>
 
-Optimization stopped because the norm of the current search direction, 9.807329e-07,
+Optimization stopped because the norm of the current search direction, 2.730865e-12,
 is less than 2*options.StepTolerance = 1.000000e-06, and the maximum constraint 
-violation, 7.048357e-09, is less than options.ConstraintTolerance = 1.000000e-06.
+violation, 1.744130e-08, is less than options.ConstraintTolerance = 1.000000e-06.
 [-] Ia [2]:   0.100  0.100
 [-] na [2]:       1      5
 [-] M [7, 7]: 
@@ -88,21 +88,44 @@ violation, 7.048357e-09, is less than options.ConstraintTolerance = 1.000000e-06
     0.0    0.0    0.0    0.0    0.0    0.0    0.0
     0.0    0.0    0.0    0.0    0.0    0.0    0.0
 [-] x_0 [2]:   1.000  1.000
-[-] x [2]:   0.492  0.250
-[-] ca [2]:   0.492  0.250
+[-] x [2]:  -0.000  0.000
+[-] ca [2]:  -0.000  0.000
 [-] C [7, 7]: 
-    0.5    0.0    0.0    0.0    0.0   -0.5    0.0
+   -0.0    0.0    0.0    0.0    0.0    0.0    0.0
     0.0    0.0    0.0    0.0    0.0    0.0    0.0
     0.0    0.0    0.0    0.0    0.0    0.0    0.0
     0.0    0.0    0.0    0.0    0.0    0.0    0.0
-    0.0    0.0    0.0    0.0    0.2    0.0   -0.2
-   -0.5    0.0    0.0    0.0    0.0    0.5    0.0
-    0.0    0.0    0.0    0.0   -0.2    0.0    0.2
+    0.0    0.0    0.0    0.0    0.0    0.0   -0.0
+    0.0    0.0    0.0    0.0    0.0   -0.0    0.0
+    0.0    0.0    0.0    0.0   -0.0    0.0    0.0
 
 Part D:
 ~~~~~~~
-[-] Elapsed Time:  28.3 s
-[-] na [2]:       0      0
-[-] Ia [2]:   0.000  0.000
-[-] ca [2]:   0.000  0.000
-[!] Could not found even a single finite solution!
+[-] Elapsed Time:  45.4 s
+[-] na [2]:       1      3
+[-] Ia [2]:   0.200  0.000
+[-] ca [2]:  -0.000  0.000
+[-] M [7, 7]: 
+   20.0    0.0    0.0    0.0    0.0    0.0    0.0
+    0.0   20.0    0.0    0.0    0.0    0.0    0.0
+    0.0    0.0   20.0    0.0    0.0    0.0    0.0
+    0.0    0.0    0.0   20.0    0.0    0.0    0.0
+    0.0    0.0    0.0    0.0   20.0    0.0    0.0
+    0.0    0.0    0.0    0.0    0.0    0.2    0.0
+    0.0    0.0    0.0    0.0    0.0    0.0    0.0
+[-] C [7, 7]: 
+   -0.0    0.0    0.0    0.0    0.0    0.0    0.0
+    0.0    0.0    0.0    0.0    0.0    0.0    0.0
+    0.0    0.0    0.0    0.0    0.0    0.0   -0.0
+    0.0    0.0    0.0    0.0    0.0    0.0    0.0
+    0.0    0.0    0.0    0.0    0.0    0.0    0.0
+    0.0    0.0    0.0    0.0    0.0   -0.0    0.0
+    0.0    0.0   -0.0    0.0    0.0    0.0    0.0
+[-] K [7, 7]: 
+  250.0 -125.0    0.0    0.0    0.0    0.0    0.0
+ -125.0  250.0 -125.0    0.0    0.0    0.0    0.0
+    0.0 -125.0  250.0 -125.0    0.0    0.0    0.0
+    0.0    0.0 -125.0  250.0 -125.0    0.0    0.0
+    0.0    0.0    0.0 -125.0  125.0    0.0    0.0
+    0.0    0.0    0.0    0.0    0.0    0.0    0.0
+    0.0    0.0    0.0    0.0    0.0    0.0    0.0

@@ -87,6 +87,8 @@ end
 
 % Timer Start
 c_start = tic();
+% Maximum Excitation Frequency
+w_e_max = max(w) * 1.5;
 % Excitation Frequency Range
 w_e_range = max(w) * (10.^(-1:0.001:log10(1.5)));
 % Base Excitation (Divided by sin(wt))
@@ -133,7 +135,7 @@ x_0 = [1, 1];
 % Lower Bound
 x_lb = [0, 0];
 % Optimized Function
-x_f = @(x) f_T_range(n, w_e_range, M, f_C(n, m, na, f_ca(x)), K, F, P_);
+x_f = @(x) f_T_max(n, w_e_max, M, f_C(n, m, na, f_ca(x)), K, F, P_);
 % Optimization Options
 x_options = optimoptions('fminimax');
 x_options.MaxIterations = 2e3;
@@ -198,7 +200,7 @@ for na1 = 1:n - 1
         na_j(1) = na1;
         na_j(2) = na2;
         % Optimize
-        [Ia_j, ca_j, T_minimax_j] = f_T_minimax(n, m, na_j, u, I, k);
+        [Ia_j, ca_j, T_minimax_j] = f_T_minimax(n, w_e_max, m, na_j, u, I, k);
         % ... replace if better.
         if T_minimax > T_minimax_j
             na = na_j;
@@ -215,8 +217,6 @@ if ~isinf(T_minimax)
     C = f_C(n, m, na, ca);
     % Stiffness Matrix
     K = f_K(n, m, k);
-    % Natural Frequencies in rad/s
-    w = f_w(n, m, M, K);
     % Plot
     plot_T_range(n, w_e_range, M, C, K, F, P_, 'Part D Transmissibility');
 end
@@ -234,9 +234,6 @@ if ~isinf(T_minimax)
     file.prmat("[-] M", M, "%7.1f");
     file.prmat("[-] C", C, "%7.1f");
     file.prmat("[-] K", K, "%7.1f");
-    for j = 1:n + m
-        file.print("[*] w_%1.0f = %5.3f %5s", j, w(j), "rad/s");
-    end
 else
     file.print("[!] Could not found even a single finite solution!");
 end
@@ -282,21 +279,7 @@ function K = f_K(n, m, k)
     end
 end
 
-% Natural Frequencies in rad/s
-function w = f_w(n, m, M, K)
-    % First Transformation
-    M_ = M^(-1/2);
-    K_ = M_ * K * M_;
-    % Eigenvector and Eigenvalue Matrix
-    [~, L] = eig(K_);
-    % Natural Frequencies in rad/s
-    w = zeros(n + m, 1);
-    for j = 1:n + m
-        w(j) = L(j, j)^(1/2);
-    end
-end
-
-function [Ia, ca, T_minimax] = f_T_minimax(n, m, na, u, I, k)
+function [Ia, ca, T_minimax] = f_T_minimax(n, w_e_max, m, na, u, I, k)
     % Stiffness Matrix
     K = f_K(n, m, k);
     % Base Excitation (Divided by sin(wt))
@@ -313,7 +296,7 @@ function [Ia, ca, T_minimax] = f_T_minimax(n, m, na, u, I, k)
     % Lower Bound
     x_lb = [0, 0, 0, 0];
     % Optimized Function
-    x_f = @(x) f_T_partd(n, m, na, f_Ia(x), f_ca(x), I, K, F, P_);
+    x_f = @(x) f_T_max(n, w_e_max, f_M(n, m, I, f_Ia(x)), f_C(n, m, na, f_ca(x)), K, F, P_);
     % Linear Equality Constraint
     x_Aeq = [1, 1, 0, 0];
     x_beq = u;
@@ -331,25 +314,19 @@ function [Ia, ca, T_minimax] = f_T_minimax(n, m, na, u, I, k)
     T_minimax = x_maxfval;
 end
 
-% Transmissibility Range Part D
-function T_partd = f_T_partd(n, m, na, Ia, ca, I, K, F, P_)
-    M = f_M(n, m, I, Ia);
-    C = f_C(n, m, na, ca);
-    w = f_w(n, m, M, K);
-    T_partd = f_T_range(n, w, M, C, K, F, P_);
-end
-
-% Transmissibility Range for the Given Excitation Frequency Range
-function T_range = f_T_range(n, w_e_range, M, C, K, F, P_)
-    % Transmissibility Range
-    T_range = zeros(size(w_e_range));
-    for j = 1:length(w_e_range)
-        % Base Excitation Frequency
-        w_e = w_e_range(j);
-        if w_e ~= 0
-            T_range(j) = f_T(n, w_e, M, C, K, F, P_);
-        end
-    end
+function T_max = f_T_max(n, w_e_max, M, C, K, F, P_)
+    % Optimization Parameter Vector
+    % [w_e]
+    % Lower Bound
+    x_1 = 0;
+    % Upper Bound
+    x_2 = w_e_max;
+    % Optimized Function
+    x_f = @(x) -f_T(n, x, M, C, K, F, P_);
+    % Optimization Results
+    [~, x_fval] = fminbnd(x_f, x_1, x_2);
+    % Maximum Transmissibility
+    T_max = -x_fval;
 end
 
 % Transmissibility
@@ -365,7 +342,10 @@ end
 % Plot Transmisibility Range
 function plot_T_range(n, w_e_range, M, C, K, F, P_, title)
     % Transmissibility Range
-    T_range = f_T_range(n, w_e_range, M, C, K, F, P_);
+    T_range = zeros(size(w_e_range));
+    for j = 1:length(w_e_range)
+        T_range(j) = f_T(n, w_e_range(j), M, C, K, F, P_);
+    end
     % Plot
     figure();
     set(gca, 'YScale', 'log');
