@@ -131,11 +131,11 @@ F(1) = k * P_;
 % [ca1, ca2]
 f_ca = @(x) [x(1); x(2)];
 % Initial Value
-x_0 = [1, 1];
+x_0 = [0.5, 0.5];
 % Lower Bound
 x_lb = [0, 0];
 % Optimized Function
-x_f = @(x) f_T_max(n, w_e_max, M, f_C(n, m, na, f_ca(x)), K, F, P_);
+x_f = @(x) f_T_max(n, w, M, f_C(n, m, na, f_ca(x)), K, F, P_);
 % Optimization Options
 x_options = optimoptions('fminimax');
 x_options.MaxIterations = 2e3;
@@ -204,7 +204,7 @@ for na1 = 1:n - 1
         na_j(1) = na1;
         na_j(2) = na2;
         % Optimize
-        [Ia_j, ca_j, T_minimax_j, x_flag, x_output] = f_T_minimax(n, w_e_max, m, na_j, u, I, k);
+        [Ia_j, ca_j, T_minimax_j, x_flag, x_output] = f_T_minimax(n, w, m, na_j, u, I, k);
         if x_flag ~= 1 && isempty(first_wrong_flag)
             first_wrong_flag = x_flag;
             first_wrong_output = x_output;
@@ -304,7 +304,7 @@ function K = f_K(n, m, k)
     end
 end
 
-function [Ia, ca, T_minimax, x_flag, x_output] = f_T_minimax(n, w_e_max, m, na, u, I, k)
+function [Ia, ca, T_minimax, x_flag, x_output] = f_T_minimax(n, w, m, na, u, I, k)
     % Stiffness Matrix
     K = f_K(n, m, k);
     % Base Excitation (Divided by sin(wt))
@@ -317,11 +317,11 @@ function [Ia, ca, T_minimax, x_flag, x_output] = f_T_minimax(n, w_e_max, m, na, 
     f_Ia = @(x) [x(1); x(2)];
     f_ca = @(x) [x(3); x(4)];
     % Initial Value
-    x_0 = [u / 2, u / 2, 1, 1];
+    x_0 = [u / 2, u / 2, 0.5, 0.5];
     % Lower Bound
     x_lb = [0, 0, 0, 0];
     % Optimized Function
-    x_f = @(x) f_T_max(n, w_e_max, f_M(n, m, I, f_Ia(x)), f_C(n, m, na, f_ca(x)), K, F, P_);
+    x_f = @(x) f_T_max(n, w, f_M(n, m, I, f_Ia(x)), f_C(n, m, na, f_ca(x)), K, F, P_);
     % Linear Equality Constraint
     x_Aeq = [1, 1, 0, 0];
     x_beq = u;
@@ -339,28 +339,11 @@ function [Ia, ca, T_minimax, x_flag, x_output] = f_T_minimax(n, w_e_max, m, na, 
     T_minimax = x_maxfval;
 end
 
-function T_max_range = f_T_max(n, w_e_max, M, C, K, F, P_)
+function T_max_range = f_T_max(n, w, M, C, K, F, P_)
     % Different Local Maximum Transmissibilities
-    T_max_range = zeros(1, n);
-    % Step Size in Frequency
-    w_e_step = w_e_max / length(T_max_range);
-    % Frequency Range Start
-    w_e_start = 0;
-    for k = 1:length(T_max_range)
-        % Optimization Parameter Vector
-        % [w_e]
-        % Lower Bound
-        x_1 = w_e_start;
-        % Upper Bound
-        x_2 = w_e_start + w_e_step;
-        % Optimized Function
-        x_f = @(x) -f_T(n, x, M, C, K, F, P_);
-        % Optimization Results
-        [~, x_fval] = fminbnd(x_f, x_1, x_2);
-        % Maximum Transmissibility
-        T_max_range(k) = -x_fval;
-        % Next Range
-        w_e_start = w_e_start + w_e_step;
+    T_max_range = zeros(size(w));
+    for k = 1:length(w)
+        T_max_range(k) = f_T(n, w(k), M, C, K, F, P_);
     end
 end
 
