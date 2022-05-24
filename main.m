@@ -91,8 +91,14 @@ c_start = tic();
 w_e_max = max(w) * 1.5;
 % Excitation Frequency Range
 w_e_range = max(w) * (10.^(-1:0.001:log10(1.5)));
+% Transmissibility Range
+T_range = f_T_range(n, w_e_range, M, f_C(n, 0, [], []), K, k);
+% Critical Transmissibility Point
+[T_cr, j_cr] = max(T_range);
+% Critical Frequency
+w_e_cr = w_e_range(j_cr);
 % Plot
-plot_T_range(n, w_e_range, M, f_C(n, 0, [], []), K, k, 'Part B Transmissibility');
+plot_T_range(w_e_range, T_range, 'Part B Transmissibility');
 % Elapsed Time
 c_elapsed = toc(c_start);
 
@@ -100,6 +106,8 @@ file.print("");
 file.print("Part B:");
 file.print("~~~~~~~");
 file.print("[-] Elapsed Time: %5.1f s", c_elapsed);
+file.print("[-] %6s = %10.3f", "T_cr", T_cr);
+file.print("[-] %6s = %10.3f rad/s", "w_e_cr", w_e_cr);
 
 % PART C ----------------------------------------------------------------------
 
@@ -127,7 +135,7 @@ x_0 = [0.5, 0.5];
 % Lower Bound
 x_lb = [0, 0];
 % Optimized Function
-x_f = @(x) f_T_max(n, w_e_range, M, f_C(n, m, na, f_ca(x)), K, k);
+x_f = @(x) f_T_range(n, w_e_range, M, f_C(n, m, na, f_ca(x)), K, k);
 % Optimization Options
 x_options = optimoptions('fminimax');
 x_options.MaxIterations = 100;
@@ -139,8 +147,14 @@ x_options.Display = 'iter';
 ca = f_ca(x);
 % Damping Matrix
 C = f_C(n, m, na, ca);
+% Transmissibility Range
+T_range = f_T_range(n, w_e_range, M, C, K, k);
+% Critical Transmissibility Point
+[T_cr, j_cr] = max(T_range);
+% Critical Frequency
+w_e_cr = w_e_range(j_cr);
 % Plot
-plot_T_range(n, w_e_range, M, C, K, k, 'Part C Transmissibility');
+plot_T_range(w_e_range, T_range, 'Part C Transmissibility');
 % Elapsed Time
 c_elapsed = toc(c_start);
 
@@ -156,6 +170,8 @@ file.prvec("[-] x_0", x_0, "%7.3f");
 file.prvec("[-] x", x, "%7.3f");
 file.prvec("[-] ca", ca, "%7.3f");
 file.prmat("[-] C", C, "%7.1f");
+file.print("[-] %6s = %10.3f", "T_cr", T_cr);
+file.print("[-] %6s = %10.3f rad/s", "w_e_cr", w_e_cr);
 
 % PART D ----------------------------------------------------------------------
 
@@ -196,8 +212,14 @@ if ~isinf(T_minimax)
     C = f_C(n, m, na, ca);
     % Stiffness Matrix
     K = f_K(n, m, k);
+    % Transmissibility Range
+    T_range = f_T_range(n, w_e_range, M, C, K, k);
+    % Critical Transmissibility Point
+    [T_cr, j_cr] = max(T_range);
+    % Critical Frequency
+    w_e_cr = w_e_range(j_cr);
     % Plot
-    plot_T_range(n, w_e_range, M, C, K, k, 'Part D Transmissibility');
+    plot_T_range(w_e_range, T_range, 'Part D Transmissibility');
 end
 % Elapsed Time
 c_elapsed = toc(c_start);
@@ -213,6 +235,8 @@ if ~isinf(T_minimax)
     file.prmat("[-] M", M, "%7.1f");
     file.prmat("[-] C", C, "%7.1f");
     file.prmat("[-] K", K, "%7.1f");
+    file.print("[-] %6s = %10.3f", "T_cr", T_cr);
+    file.print("[-] %6s = %10.3f rad/s", "w_e_cr", w_e_cr);
 else
     file.print("[!] Could not found even a single finite solution!");
 end
@@ -270,7 +294,7 @@ function [Ia, ca, T_minimax] = f_T_minimax(n, w_e_range, m, na, u, I, k)
     % Lower Bound
     x_lb = [0, 0, 0, 0];
     % Optimized Function
-    x_f = @(x) f_T_max(n, w_e_range, f_M(n, m, I, f_Ia(x)), f_C(n, m, na, f_ca(x)), K, k);
+    x_f = @(x) f_T_range(n, w_e_range, f_M(n, m, I, f_Ia(x)), f_C(n, m, na, f_ca(x)), K, k);
     % Linear Equality Constraint
     x_Aeq = [1, 1, 0, 0];
     x_beq = u;
@@ -289,7 +313,7 @@ function [Ia, ca, T_minimax] = f_T_minimax(n, w_e_range, m, na, u, I, k)
     T_minimax = x_maxfval;
 end
 
-function T_range = f_T_max(n, w_e_range, M, C, K, k)
+function T_range = f_T_range(n, w_e_range, M, C, K, k)
     % Transmissibility Range
     T_range = zeros(size(w_e_range));
     for j = 1:length(w_e_range)
@@ -306,7 +330,7 @@ function T = f_T(n, w_e, M, C, K, k)
 end
 
 % Plot Transmisibility Range
-function plot_T_range(n, w_e_range, M, C, K, k, title)
+function plot_T_range(w_e_range, T_range, title)
     % Plot
     figure();
     set(gca, 'YScale', 'log');
@@ -315,6 +339,6 @@ function plot_T_range(n, w_e_range, M, C, K, k, title)
     grid('on');
     xlabel('\omega (rad/s)');
     ylabel('|\Theta_n/\Phi|');
-    plot(w_e_range, f_T_max(n, w_e_range, M, C, K, k), 'LineWidth', 2);
+    plot(w_e_range, T_range, 'LineWidth', 2);
     saveas(gcf, title, 'jpeg');
 end
