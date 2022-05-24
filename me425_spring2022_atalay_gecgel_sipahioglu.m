@@ -1,13 +1,12 @@
-% gecgelcem 02.05.2022
-% me425 spring2022 prj
+% me425 spring2022 project
+% atalay gecgel sipahioglu
 
 close('all');
 clear();
 clc();
 
-file = printer('Output.txt');
-file.print("gecgelcem 02.05.2022");
-file.print("me425 spring2022 prj");
+print("me425 spring2022 project");
+print("atalay gecgel sipahioglu");
 
 % INPUT -----------------------------------------------------------------------
 
@@ -20,11 +19,11 @@ u_min = 0.1;
 u_max = 0.3;
 u = ask(sprintf("\nEnter %1s in [%3.1f, %3.1f] %0s: ", "u", u_min, u_max, ""), u_min, u_max);
 % Print
-file.print("");
-file.print("Input:");
-file.print("~~~~~~");
-file.print("[-] %1s = %4.0f %0s", "n", n, "");
-file.print("[-] %1s = %4.2f %0s", "u", u, "");
+print("");
+print("Input:");
+print("~~~~~~");
+print("[-] %1s = %4.0f %0s", "n", n, "");
+print("[-] %1s = %4.2f %0s", "u", u, "");
 
 % INITIAL CALCULATIONS --------------------------------------------------------
 
@@ -33,11 +32,11 @@ I = 100 / n;
 % Torsional Stiffness Between Disks
 k = 25 * n;
 % Print
-file.print("");
-file.print("Initial Caclculations:");
-file.print("~~~~~~~~~~~~~~~~~~~~~~");
-file.print("[-] %1s = %5.1f %0s", "I", I, "");
-file.print("[-] %1s = %5.1f %0s", "k", k, "");
+print("");
+print("Initial Caclculations:");
+print("~~~~~~~~~~~~~~~~~~~~~~");
+print("[-] %1s = %5.1f %0s", "I", I, "");
+print("[-] %1s = %5.1f %0s", "k", k, "");
 
 % PART A ----------------------------------------------------------------------
 
@@ -70,22 +69,20 @@ for j = 1:n
     plot(1:n, P(:, j), '-o', 'LineWidth', 2);
     yline(0, '--', 'LineWidth', 2);
 end
-name = sprintf("%s n=%.0f u=%.2f", "Part A Mode Shapes", n, u);
-saveas(gcf, sprintf("%s.jpeg", name), 'jpeg');
 % Elapsed Time
 c_elapsed = toc(c_start);
 % Print
-file.print("");
-file.print("Part A:");
-file.print("~~~~~~~");
-file.print("[-] Elapsed Time: %5.1f s", c_elapsed);
-file.prmat("[-] M", M, "%9.3f");
-file.prmat("[-] K", K, "%9.3f");
-file.prmat("[-] M_", M_, "%9.3f");
-file.prmat("[-] K_", K_, "%9.3f");
+print("");
+print("Part A:");
+print("~~~~~~~");
+print("[-] Elapsed Time: %5.1f s", c_elapsed);
+prmat("[-] M", M, "%9.3f");
+prmat("[-] K", K, "%9.3f");
+prmat("[-] M_", M_, "%9.3f");
+prmat("[-] K_", K_, "%9.3f");
 for j = 1:n
-    file.print("[*] w_%1.0f = %5.3f %5s", j, w(j), "rad/s");
-    file.prvec(sprintf("[*] v_%1.0f", j), P(:, j), "%5.1f");
+    print("[*] w_%1.0f = %5.3f %5s", j, w(j), "rad/s");
+    prvec(sprintf("[*] v_%1.0f", j), P(:, j), "%5.1f");
 end
 
 % PART B ----------------------------------------------------------------------
@@ -105,12 +102,12 @@ plot_T_range(w_e_range, T_range, 'Part B Transmissibility', n, u);
 % Elapsed Time
 c_elapsed = toc(c_start);
 % Print
-file.print("");
-file.print("Part B:");
-file.print("~~~~~~~");
-file.print("[-] Elapsed Time: %5.1f s", c_elapsed);
-file.print("[-] %6s = %10.3f", "T_cr", T_cr);
-file.print("[-] %6s = %10.3f rad/s", "w_e_cr", w_e_cr);
+print("");
+print("Part B:");
+print("~~~~~~~");
+print("[-] Elapsed Time: %5.1f s", c_elapsed);
+print("[-] %6s = %10.3f", "T_cr", T_cr);
+print("[-] %6s = %10.3f rad/s", "w_e_cr", w_e_cr);
 
 % PART C ----------------------------------------------------------------------
 
@@ -161,20 +158,20 @@ plot_T_range(w_e_range, T_range, 'Part C Transmissibility', n, u);
 % Elapsed Time
 c_elapsed = toc(c_start);
 % Print
-file.print("");
-file.print("Part C:");
-file.print("~~~~~~~");
-file.print("[-] Elapsed Time: %5.1f s", c_elapsed);
-file.prvec("[-] Ia", Ia, "%7.3f");
-file.prvec("[-] na", na, "%7.0f");
-file.prmat("[-] M", M, "%9.3f");
-file.prmat("[-] K", K, "%9.3f");
-file.prvec("[-] x_0", x_0, "%7.3f");
-file.prvec("[-] x", x, "%7.3f");
-file.prvec("[-] ca", ca, "%7.3f");
-file.prmat("[-] C", C, "%9.3f");
-file.print("[-] %6s = %10.3f", "T_cr", T_cr);
-file.print("[-] %6s = %10.3f rad/s", "w_e_cr", w_e_cr);
+print("");
+print("Part C:");
+print("~~~~~~~");
+print("[-] Elapsed Time: %5.1f s", c_elapsed);
+prvec("[-] Ia", Ia, "%7.3f");
+prvec("[-] na", na, "%7.0f");
+prmat("[-] M", M, "%9.3f");
+prmat("[-] K", K, "%9.3f");
+prvec("[-] x_0", x_0, "%7.3f");
+prvec("[-] x", x, "%7.3f");
+prvec("[-] ca", ca, "%7.3f");
+prmat("[-] C", C, "%9.3f");
+print("[-] %6s = %10.3f", "T_cr", T_cr);
+print("[-] %6s = %10.3f rad/s", "w_e_cr", w_e_cr);
 
 % PART D ----------------------------------------------------------------------
 
@@ -227,21 +224,21 @@ end
 % Elapsed Time
 c_elapsed = toc(c_start);
 % Print
-file.print("");
-file.print("Part D:");
-file.print("~~~~~~~");
-file.print("[-] Elapsed Time: %5.1f s", c_elapsed);
-file.prvec("[-] na", na, "%7.0f");
-file.prvec("[-] Ia", Ia, "%7.3f");
-file.prvec("[-] ca", ca, "%7.3f");
+print("");
+print("Part D:");
+print("~~~~~~~");
+print("[-] Elapsed Time: %5.1f s", c_elapsed);
+prvec("[-] na", na, "%7.0f");
+prvec("[-] Ia", Ia, "%7.3f");
+prvec("[-] ca", ca, "%7.3f");
 if ~isinf(T_min)
-    file.prmat("[-] M", M, "%9.3f");
-    file.prmat("[-] C", C, "%9.3f");
-    file.prmat("[-] K", K, "%9.3f");
-    file.print("[-] %6s = %10.3f", "T_cr", T_cr);
-    file.print("[-] %6s = %10.3f rad/s", "w_e_cr", w_e_cr);
+    prmat("[-] M", M, "%9.3f");
+    prmat("[-] C", C, "%9.3f");
+    prmat("[-] K", K, "%9.3f");
+    print("[-] %6s = %10.3f", "T_cr", T_cr);
+    print("[-] %6s = %10.3f rad/s", "w_e_cr", w_e_cr);
 else
-    file.print("[!] Could not found even a single finite solution!");
+    print("[!] Could not found even a single finite solution!");
 end
 
 % Inertia Matrix
@@ -370,9 +367,7 @@ function plot_T_range(w_e_range, T_range, name, n, u)
     xlabel('\omega (rad/s)');
     ylabel('|\Theta_n/\Phi|');
     plot(w_e_range, T_range, 'LineWidth', 2);
-    name = sprintf("%s n=%.0f u=%.2f", name, n, u);
     title(name);
-    saveas(gcf, sprintf("%s.jpeg", name), 'jpeg');
 end
 
 % Get The User Input
@@ -396,4 +391,26 @@ function x = ask(msg, x_min, x_max, integer)
             x = round(x);
         end
     end
+end
+
+function print(varargin)
+    fprintf('%s\n', sprintf(varargin{:}));
+end
+
+function prmat(name, matrix, element)
+    print("%s [%.0f, %.0f]: ", name, size(matrix, 1), size(matrix, 2));
+    for k = 1:size(matrix, 1)
+        for j = 1:size(matrix, 2)
+            fprintf(element, matrix(k, j));
+        end
+        fprintf("\n");
+    end
+end
+
+function prvec(name, vector, element)
+    fprintf("%s [%.0f]: ", name, length(vector));
+    for k = 1:length(vector)
+        fprintf(element, vector(k));
+    end
+    fprintf("\n");
 end
