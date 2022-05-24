@@ -123,15 +123,16 @@ K = f_K(n, m, k);
 % [ca1, ca2]
 f_ca = @(x) [x(1); x(2)];
 % Initial Value
-x_0 = [0.5, 0.5];
+x_0 = [50, 50];
 % Lower Bound
 x_lb = [0, 0];
 % Optimized Function
 x_f = @(x) f_T_max(n, w, M, f_C(n, m, na, f_ca(x)), K, k);
 % Optimization Options
 x_options = optimoptions('fminimax');
-x_options.MaxIterations = 2e3;
-x_options.MaxFunctionEvaluations = 1e6;
+x_options.MaxIterations = 1e5;
+x_options.MaxFunctionEvaluations = 1e8;
+x_options.Display = 'iter';
 % Optimization Results
 [x, ~, ~, x_flag, x_output] = fminimax(x_f, x_0, [], [], [], [], x_lb, [], [], x_options);
 % Absorber Dampings
@@ -304,7 +305,7 @@ function [Ia, ca, T_minimax, x_flag, x_output] = f_T_minimax(n, w, m, na, u, I, 
     f_Ia = @(x) [x(1); x(2)];
     f_ca = @(x) [x(3); x(4)];
     % Initial Value
-    x_0 = [u / 2, u / 2, 0.5, 0.5];
+    x_0 = [u / 2, u / 2, 50, 50];
     % Lower Bound
     x_lb = [0, 0, 0, 0];
     % Optimized Function
@@ -315,7 +316,8 @@ function [Ia, ca, T_minimax, x_flag, x_output] = f_T_minimax(n, w, m, na, u, I, 
     % Optimization Options
     x_options = optimoptions('fminimax');
     x_options.MaxIterations = 100;
-    x_options.MaxFunctionEvaluations = 500;
+    x_options.MaxFunctionEvaluations = 1000;
+    x_options.Display = 'iter';
     % Optimization Results
     [x, ~, x_maxfval, x_flag, x_output] = fminimax(x_f, x_0, [], [], x_Aeq, x_beq, x_lb, [], [], x_options);
     % Absorber Inertias
@@ -327,24 +329,22 @@ function [Ia, ca, T_minimax, x_flag, x_output] = f_T_minimax(n, w, m, na, u, I, 
 end
 
 function T_max_range = f_T_max(n, w, M, C, K, k)
-    % Frequency Spots
-    w_range = [0; w; max(w) * 1.5];
-    % Different Local Maximum Transmissibilities
-    T_max_range = zeros(1, length(w_range) - 1);
-    for j = 2:length(w_range)
-        % Optimization Parameter Vector
-        % [w_e]
-        % Lower Bound
-        x_1 = w_range(j - 1);
-        % Upper Bound
-        x_2 = w_range(j);
-        % Optimized Function
-        x_f = @(x) -f_T(n, x, M, C, K, k);
-        % Optimization Results
-        [~, x_fval] = fminbnd(x_f, x_1, x_2);
-        % Maximum Transmissibility
-        T_max_range(j - 1) = -x_fval;
-    end
+    % Optimization Parameter Vector
+    % [w_e]
+    % Lower Bound
+    x_lb = 0;
+    % Upper Bound
+    x_ub = max(w) * 1.5;
+    % Optimized Function
+    x_f = @(x) -f_T(n, x, M, C, K, k);
+    % Optimization Options
+    x_options = optimset('fminbnd');
+    x_options.MaxIterations = 1e5;
+    x_options.MaxFunctionEvaluations = 1e8;
+    % Optimization Results
+    [~, x_fval] = fminbnd(x_f, x_lb, x_ub, x_options);
+    % Maximum Transmissibility
+    T_max_range = -x_fval;
 end
 
 % Transmissibility
