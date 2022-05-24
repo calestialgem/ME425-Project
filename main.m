@@ -300,7 +300,7 @@ end
 % Transmissibility
 function T = f_T(n, w_e, M, C, K, k)
     % Receptance Matrix
-    a = (-w_e^2 * M + w_e * C + K)^ - 1;
+    a = (-w_e^2 * M + 1i * w_e * C + K)^ - 1;
     % Transmissibility
     T = abs(a(1, n) * k);
 end
