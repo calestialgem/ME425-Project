@@ -123,15 +123,15 @@ K = f_K(n, m, k);
 % [ca1, ca2]
 f_ca = @(x) [x(1); x(2)];
 % Initial Value
-x_0 = [50, 50];
+x_0 = [0.5, 0.5];
 % Lower Bound
 x_lb = [0, 0];
 % Optimized Function
-x_f = @(x) f_T_max(n, w, M, f_C(n, m, na, f_ca(x)), K, k);
+x_f = @(x) f_T_max(n, w_e_range, M, f_C(n, m, na, f_ca(x)), K, k);
 % Optimization Options
 x_options = optimoptions('fminimax');
-x_options.MaxIterations = 1e5;
-x_options.MaxFunctionEvaluations = 1e8;
+x_options.MaxIterations = 100;
+x_options.MaxFunctionEvaluations = 1000;
 x_options.Display = 'iter';
 % Optimization Results
 [x, ~, ~, x_flag, x_output] = fminimax(x_f, x_0, [], [], [], [], x_lb, [], [], x_options);
@@ -197,7 +197,7 @@ for na1 = 1:n - 1
         na_j(1) = na1;
         na_j(2) = na2;
         % Optimize
-        [Ia_j, ca_j, T_minimax_j, x_flag, x_output] = f_T_minimax(n, w, m, na_j, u, I, k);
+        [Ia_j, ca_j, T_minimax_j, x_flag, x_output] = f_T_minimax(n, w_e_range, m, na_j, u, I, k);
         if x_flag ~= 1 && isempty(first_wrong_flag)
             first_wrong_flag = x_flag;
             first_wrong_output = x_output;
@@ -297,7 +297,7 @@ function K = f_K(n, m, k)
     end
 end
 
-function [Ia, ca, T_minimax, x_flag, x_output] = f_T_minimax(n, w, m, na, u, I, k)
+function [Ia, ca, T_minimax, x_flag, x_output] = f_T_minimax(n, w_e_range, m, na, u, I, k)
     % Stiffness Matrix
     K = f_K(n, m, k);
     % Optimization Parameter Vector
@@ -305,11 +305,11 @@ function [Ia, ca, T_minimax, x_flag, x_output] = f_T_minimax(n, w, m, na, u, I, 
     f_Ia = @(x) [x(1); x(2)];
     f_ca = @(x) [x(3); x(4)];
     % Initial Value
-    x_0 = [u / 2, u / 2, 50, 50];
+    x_0 = [u / 2, u / 2, 0.5, 0.5];
     % Lower Bound
     x_lb = [0, 0, 0, 0];
     % Optimized Function
-    x_f = @(x) f_T_max(n, w, f_M(n, m, I, f_Ia(x)), f_C(n, m, na, f_ca(x)), K, k);
+    x_f = @(x) f_T_max(n, w_e_range, f_M(n, m, I, f_Ia(x)), f_C(n, m, na, f_ca(x)), K, k);
     % Linear Equality Constraint
     x_Aeq = [1, 1, 0, 0];
     x_beq = u;
@@ -328,23 +328,12 @@ function [Ia, ca, T_minimax, x_flag, x_output] = f_T_minimax(n, w, m, na, u, I, 
     T_minimax = x_maxfval;
 end
 
-function T_max_range = f_T_max(n, w, M, C, K, k)
-    % Optimization Parameter Vector
-    % [w_e]
-    % Lower Bound
-    x_lb = 0;
-    % Upper Bound
-    x_ub = max(w) * 1.5;
-    % Optimized Function
-    x_f = @(x) -f_T(n, x, M, C, K, k);
-    % Optimization Options
-    x_options = optimset('fminbnd');
-    x_options.MaxIterations = 1e5;
-    x_options.MaxFunctionEvaluations = 1e8;
-    % Optimization Results
-    [~, x_fval] = fminbnd(x_f, x_lb, x_ub, x_options);
-    % Maximum Transmissibility
-    T_max_range = -x_fval;
+function T_range = f_T_max(n, w_e_range, M, C, K, k)
+    % Transmissibility Range
+    T_range = zeros(size(w_e_range));
+    for j = 1:length(w_e_range)
+        T_range(j) = f_T(n, w_e_range(j), M, C, K, k);
+    end
 end
 
 % Transmissibility
@@ -357,11 +346,6 @@ end
 
 % Plot Transmisibility Range
 function plot_T_range(n, w_e_range, M, C, K, k, title)
-    % Transmissibility Range
-    T_range = zeros(size(w_e_range));
-    for j = 1:length(w_e_range)
-        T_range(j) = f_T(n, w_e_range(j), M, C, K, k);
-    end
     % Plot
     figure();
     set(gca, 'YScale', 'log');
@@ -370,6 +354,6 @@ function plot_T_range(n, w_e_range, M, C, K, k, title)
     grid('on');
     xlabel('\omega');
     ylabel('|\Theta_n/\Phi|');
-    plot(w_e_range, T_range, 'LineWidth', 2);
+    plot(w_e_range, f_T_max(n, w_e_range, M, C, K, k), 'LineWidth', 2);
     saveas(gcf, title, 'jpeg');
 end
