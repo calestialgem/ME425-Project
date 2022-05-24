@@ -44,23 +44,9 @@ file.print("[-] %1s = %5.1f %0s", "k", k, "");
 % Timer Start
 c_start = tic();
 % Inertia Matrix
-M = zeros(n);
-for j = 1:n
-    M(j, j) = I;
-end
+M = f_M(n, 0, I, []);
 % Stiffness Matrix
-K = zeros(n);
-for j = 1:n
-    if j > 1
-        K(j, j - 1) = -k;
-    end
-    if j < n
-        K(j, j + 1) = -k;
-        K(j, j) = 2 * k;
-    else
-        K(j, j) = k;
-    end
-end
+K = f_K(n, 0, k);
 % First Transformation
 M_ = M^(-1/2);
 K_ = M_ * K * M_;
