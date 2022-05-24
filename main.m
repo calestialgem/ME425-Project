@@ -9,6 +9,8 @@ file = printer('Output.txt');
 file.print("gecgelcem 02.05.2022");
 file.print("me425 spring2022 prj");
 
+% INPUT -----------------------------------------------------------------------
+
 % Number of Disks
 n_min = 2;
 n_max = 5;
@@ -17,18 +19,20 @@ n = round(ask(sprintf("\nEnter %1s in [%1.0f, %1.0f] %0s: ", "n", n_min, n_max, 
 u_min = 0.1;
 u_max = 0.3;
 u = ask(sprintf("\nEnter %1s in [%3.1f, %3.1f] %0s: ", "u", u_min, u_max, ""), u_min, u_max);
-
+% Print
 file.print("");
 file.print("Input:");
 file.print("~~~~~~");
 file.print("[-] %1s = %4.0f %0s", "n", n, "");
 file.print("[-] %1s = %4.2f %0s", "u", u, "");
 
+% INITIAL CALCULATIONS --------------------------------------------------------
+
 % Rotational Inertia of a Disk
 I = 100 / n;
 % Torsional Stiffness Between Disks
 k = 25 * n;
-
+% Print
 file.print("");
 file.print("Initial Caclculations:");
 file.print("~~~~~~~~~~~~~~~~~~~~~~");
@@ -67,9 +71,18 @@ w = zeros(n, 1);
 for j = 1:n
     w(j) = L(j, j)^(1/2);
 end
+% Plot
+figure();
+hold('on');
+grid('on');
+xlabel('n');
+for j = 1:n
+    plot(1:n, P(j, :) + j * 2, '-o', 'LineWidth', 2);
+end
+saveas(gcf, "Part A Mode Shapes", 'jpeg');
 % Elapsed Time
 c_elapsed = toc(c_start);
-
+% Print
 file.print("");
 file.print("Part A:");
 file.print("~~~~~~~");
@@ -101,7 +114,7 @@ w_e_cr = w_e_range(j_cr);
 plot_T_range(w_e_range, T_range, 'Part B Transmissibility');
 % Elapsed Time
 c_elapsed = toc(c_start);
-
+% Print
 file.print("");
 file.print("Part B:");
 file.print("~~~~~~~");
@@ -157,7 +170,7 @@ w_e_cr = w_e_range(j_cr);
 plot_T_range(w_e_range, T_range, 'Part C Transmissibility');
 % Elapsed Time
 c_elapsed = toc(c_start);
-
+% Print
 file.print("");
 file.print("Part C:");
 file.print("~~~~~~~");
@@ -186,7 +199,7 @@ Ia = zeros(m, 1);
 % Absorber Dampings
 ca = zeros(m, 1);
 % Minimum Maximum Transmissibility
-T_minimax = Inf;
+T_min = Inf;
 % For all possible combinations...
 for na1 = 1:n - 1
     for na2 = na1 + 1:n
@@ -195,17 +208,17 @@ for na1 = 1:n - 1
         na_j(1) = na1;
         na_j(2) = na2;
         % Optimize
-        [Ia_j, ca_j, T_minimax_j] = f_T_minimax(n, w_e_range, m, na_j, u, I, k);
+        [Ia_j, ca_j, T_min_j] = f_T_min(n, w_e_range, m, na_j, u, I, k);
         % ... replace if better.
-        if T_minimax > T_minimax_j
+        if T_min > T_min_j
             na = na_j;
             Ia = Ia_j;
             ca = ca_j;
-            T_minimax = T_minimax_j;
+            T_min = T_min_j;
         end
     end
 end
-if ~isinf(T_minimax)
+if ~isinf(T_min)
     % Inertia Matrix
     M = f_M(n, m, I, Ia);
     % Damping Matrix
@@ -223,7 +236,7 @@ if ~isinf(T_minimax)
 end
 % Elapsed Time
 c_elapsed = toc(c_start);
-
+% Print
 file.print("");
 file.print("Part D:");
 file.print("~~~~~~~");
@@ -231,7 +244,7 @@ file.print("[-] Elapsed Time: %5.1f s", c_elapsed);
 file.prvec("[-] na", na, "%7.0f");
 file.prvec("[-] Ia", Ia, "%7.3f");
 file.prvec("[-] ca", ca, "%7.3f");
-if ~isinf(T_minimax)
+if ~isinf(T_min)
     file.prmat("[-] M", M, "%7.1f");
     file.prmat("[-] C", C, "%7.1f");
     file.prmat("[-] K", K, "%7.1f");
@@ -282,7 +295,8 @@ function K = f_K(n, m, k)
     end
 end
 
-function [Ia, ca, T_minimax] = f_T_minimax(n, w_e_range, m, na, u, I, k)
+% Minimum Transmissibility Design
+function [Ia, ca, T_min] = f_T_min(n, w_e_range, m, na, u, I, k)
     % Stiffness Matrix
     K = f_K(n, m, k);
     % Optimization Parameter Vector
@@ -310,9 +324,10 @@ function [Ia, ca, T_minimax] = f_T_minimax(n, w_e_range, m, na, u, I, k)
     % Absorber Dampings
     ca = f_ca(x);
     % Minimized Maximum Transmissibility
-    T_minimax = x_maxfval;
+    T_min = x_maxfval;
 end
 
+% Transmissibility Range
 function T_range = f_T_range(n, w_e_range, M, C, K, k)
     % Transmissibility Range
     T_range = zeros(size(w_e_range));
