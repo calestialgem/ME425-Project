@@ -315,7 +315,7 @@ function [Ia, ca, T_minimax, x_flag, x_output] = f_T_minimax(n, w, m, na, u, I, 
     % Optimization Options
     x_options = optimoptions('fminimax');
     x_options.MaxIterations = 100;
-    x_options.MaxFunctionEvaluations = 300;
+    x_options.MaxFunctionEvaluations = 500;
     % Optimization Results
     [x, ~, x_maxfval, x_flag, x_output] = fminimax(x_f, x_0, [], [], x_Aeq, x_beq, x_lb, [], [], x_options);
     % Absorber Inertias

@@ -55,7 +55,7 @@ Part B:
 
 Part C:
 ~~~~~~~
-[-] Elapsed Time:   0.4 s
+[-] Elapsed Time:   0.5 s
 [!] Magnitude of the search direction was less than the specified tolerance, and the constraint violation was less than options.ConstraintTolerance!
 [?] Optimizer Output: 
 Local minimum possible. Constraints satisfied.
@@ -101,7 +101,7 @@ violation, 6.719250e-08, is less than options.ConstraintTolerance = 1.000000e-06
 
 Part D:
 ~~~~~~~
-[-] Elapsed Time:   0.7 s
+[-] Elapsed Time:   0.9 s
 [?] Fist Wrong Flag:
 [!] Magnitude of the directional derivative was less than the specified tolerance, and the constraint violation was less than options.ConstraintTolerance!
 [?] First Wrong Optimizer Output: 
