@@ -91,13 +91,8 @@ c_start = tic();
 w_e_max = max(w) * 1.5;
 % Excitation Frequency Range
 w_e_range = max(w) * (10.^(-1:0.001:log10(1.5)));
-% Base Excitation (Divided by sin(wt))
-P_ = 1;
-% Force Vector (Divided by sin(wt))
-F = zeros(n, 1);
-F(1) = k * P_;
 % Plot
-plot_T_range(n, w_e_range, M, f_C(n, 0, [], []), K, F, P_, 'Part B Transmissibility');
+plot_T_range(n, w_e_range, M, f_C(n, 0, [], []), K, k, 'Part B Transmissibility');
 % Elapsed Time
 c_elapsed = toc(c_start);
 
@@ -124,9 +119,6 @@ na(2) = n;
 M = f_M(n, m, I, Ia);
 % Stiffness Matrix
 K = f_K(n, m, k);
-% Force Vector (Divided by sin(wt))
-F = zeros(n + m, 1);
-F(1) = k * P_;
 % Optimization Parameter Vector
 % [ca1, ca2]
 f_ca = @(x) [x(1); x(2)];
@@ -135,7 +127,7 @@ x_0 = [0.5, 0.5];
 % Lower Bound
 x_lb = [0, 0];
 % Optimized Function
-x_f = @(x) f_T_max(n, w, M, f_C(n, m, na, f_ca(x)), K, F, P_);
+x_f = @(x) f_T_max(n, w, M, f_C(n, m, na, f_ca(x)), K, k);
 % Optimization Options
 x_options = optimoptions('fminimax');
 x_options.MaxIterations = 2e3;
@@ -147,7 +139,7 @@ ca = f_ca(x);
 % Damping Matrix
 C = f_C(n, m, na, ca);
 % Plot
-plot_T_range(n, w_e_range, M, C, K, F, P_, 'Part C Transmissibility');
+plot_T_range(n, w_e_range, M, C, K, k, 'Part C Transmissibility');
 % Elapsed Time
 c_elapsed = toc(c_start);
 
@@ -226,7 +218,7 @@ if ~isinf(T_minimax)
     % Stiffness Matrix
     K = f_K(n, m, k);
     % Plot
-    plot_T_range(n, w_e_range, M, C, K, F, P_, 'Part D Transmissibility');
+    plot_T_range(n, w_e_range, M, C, K, k, 'Part D Transmissibility');
 end
 % Elapsed Time
 c_elapsed = toc(c_start);
@@ -307,11 +299,6 @@ end
 function [Ia, ca, T_minimax, x_flag, x_output] = f_T_minimax(n, w, m, na, u, I, k)
     % Stiffness Matrix
     K = f_K(n, m, k);
-    % Base Excitation (Divided by sin(wt))
-    P_ = 1;
-    % Force Vector (Divided by sin(wt))
-    F = zeros(n + m, 1);
-    F(1) = k * P_;
     % Optimization Parameter Vector
     % [Ia1, Ia2, ca1, ca2]
     f_Ia = @(x) [x(1); x(2)];
@@ -321,7 +308,7 @@ function [Ia, ca, T_minimax, x_flag, x_output] = f_T_minimax(n, w, m, na, u, I, 
     % Lower Bound
     x_lb = [0, 0, 0, 0];
     % Optimized Function
-    x_f = @(x) f_T_max(n, w, f_M(n, m, I, f_Ia(x)), f_C(n, m, na, f_ca(x)), K, F, P_);
+    x_f = @(x) f_T_max(n, w, f_M(n, m, I, f_Ia(x)), f_C(n, m, na, f_ca(x)), K, k);
     % Linear Equality Constraint
     x_Aeq = [1, 1, 0, 0];
     x_beq = u;
@@ -339,30 +326,28 @@ function [Ia, ca, T_minimax, x_flag, x_output] = f_T_minimax(n, w, m, na, u, I, 
     T_minimax = x_maxfval;
 end
 
-function T_max_range = f_T_max(n, w, M, C, K, F, P_)
+function T_max_range = f_T_max(n, w, M, C, K, k)
     % Different Local Maximum Transmissibilities
     T_max_range = zeros(size(w));
-    for k = 1:length(w)
-        T_max_range(k) = f_T(n, w(k), M, C, K, F, P_);
+    for j = 1:length(w)
+        T_max_range(j) = f_T(n, w(j), M, C, K, k);
     end
 end
 
 % Transmissibility
-function T = f_T(n, w_e, M, C, K, F, P_)
-    % Left Hand Side Matrix After sin(wt) is Cancelled
-    A = -w_e^2 * M + w_e * C + K;
-    % Displacement Vector (Divided by sin(wt))
-    T_ = A \ F;
+function T = f_T(n, w_e, M, C, K, k)
+    % Receptance Matrix After sin(wt) is Cancelled
+    a = (-w_e^2 * M + w_e * C + K)^ - 1;
     % Transmissibility
-    T = abs(T_(n) / P_);
+    T = abs(a(1, n) * k);
 end
 
 % Plot Transmisibility Range
-function plot_T_range(n, w_e_range, M, C, K, F, P_, title)
+function plot_T_range(n, w_e_range, M, C, K, k, title)
     % Transmissibility Range
     T_range = zeros(size(w_e_range));
     for j = 1:length(w_e_range)
-        T_range(j) = f_T(n, w_e_range(j), M, C, K, F, P_);
+        T_range(j) = f_T(n, w_e_range(j), M, C, K, k);
     end
     % Plot
     figure();

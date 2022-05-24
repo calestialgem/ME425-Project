@@ -66,9 +66,9 @@ satisfied to within the value of the constraint tolerance.
 
 <stopping criteria details>
 
-Optimization stopped because the norm of the current search direction, 1.146760e-07,
+Optimization stopped because the norm of the current search direction, 1.144192e-07,
 is less than 2*options.StepTolerance = 1.000000e-06, and the maximum constraint 
-violation, 6.738737e-08, is less than options.ConstraintTolerance = 1.000000e-06.
+violation, 6.719250e-08, is less than options.ConstraintTolerance = 1.000000e-06.
 [-] Ia [2]:   0.100  0.100
 [-] na [2]:       1      5
 [-] M [7, 7]: 
@@ -101,33 +101,40 @@ violation, 6.738737e-08, is less than options.ConstraintTolerance = 1.000000e-06
 
 Part D:
 ~~~~~~~
-[-] Elapsed Time:  11.5 s
+[-] Elapsed Time:   0.7 s
 [?] Fist Wrong Flag:
-[!] Number of iterations exceeded options.MaxIterations or the number of function evaluations exceeded options.MaxFunctionEvaluations!
+[!] Magnitude of the directional derivative was less than the specified tolerance, and the constraint violation was less than options.ConstraintTolerance!
 [?] First Wrong Optimizer Output: 
-Solver stopped prematurely.
+Local minimum possible. Constraints satisfied.
 
-fminimax stopped because it exceeded the function evaluation limit,
-options.MaxFunctionEvaluations = 3.000000e+02.
-[-] na [2]:       3      4
-[-] Ia [2]:  -0.000  0.200
-[-] ca [2]:   0.000  0.347
+fminimax stopped because the predicted change in the objective function
+is less than the value of the function tolerance and constraints 
+are satisfied to within the value of the constraint tolerance.
+
+<stopping criteria details>
+
+Optimization stopped because the predicted change in the objective function,
+1.323489e-23, is less than options.FunctionTolerance = 1.000000e-06, and the maximum constraint
+violation, 1.267916e-07, is less than options.ConstraintTolerance = 1.000000e-06.
+[-] na [2]:       3      5
+[-] Ia [2]:   0.000  0.200
+[-] ca [2]:   0.000  0.248
 [-] M [7, 7]: 
    20.0    0.0    0.0    0.0    0.0    0.0    0.0
     0.0   20.0    0.0    0.0    0.0    0.0    0.0
     0.0    0.0   20.0    0.0    0.0    0.0    0.0
     0.0    0.0    0.0   20.0    0.0    0.0    0.0
     0.0    0.0    0.0    0.0   20.0    0.0    0.0
-    0.0    0.0    0.0    0.0    0.0   -0.0    0.0
+    0.0    0.0    0.0    0.0    0.0    0.0    0.0
     0.0    0.0    0.0    0.0    0.0    0.0    0.2
 [-] C [7, 7]: 
     0.0    0.0    0.0    0.0    0.0    0.0    0.0
     0.0    0.0    0.0    0.0    0.0    0.0    0.0
     0.0    0.0    0.0    0.0    0.0   -0.0    0.0
-    0.0    0.0    0.0    0.3    0.0    0.0   -0.3
     0.0    0.0    0.0    0.0    0.0    0.0    0.0
+    0.0    0.0    0.0    0.0    0.2    0.0   -0.2
     0.0    0.0   -0.0    0.0    0.0    0.0    0.0
-    0.0    0.0    0.0   -0.3    0.0    0.0    0.3
+    0.0    0.0    0.0    0.0   -0.2    0.0    0.2
 [-] K [7, 7]: 
   250.0 -125.0    0.0    0.0    0.0    0.0    0.0
  -125.0  250.0 -125.0    0.0    0.0    0.0    0.0
