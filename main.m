@@ -14,7 +14,7 @@ file.print("me425 spring2022 prj");
 % Number of Disks
 n_min = 2;
 n_max = 5;
-n = round(ask(sprintf("\nEnter %1s in [%1.0f, %1.0f] %0s: ", "n", n_min, n_max, ""), n_min, n_max));
+n = ask(sprintf("\nEnter %1s in [%1.0f, %1.0f] %0s: ", "n", n_min, n_max, ""), n_min, n_max, true);
 % Total Houdaille Damper Viscosity
 u_min = 0.1;
 u_max = 0.3;
@@ -79,10 +79,10 @@ file.print("");
 file.print("Part A:");
 file.print("~~~~~~~");
 file.print("[-] Elapsed Time: %5.1f s", c_elapsed);
-file.prmat("[-] M", M, "%5.0f");
-file.prmat("[-] K", K, "%5.0f");
-file.prmat("[-] M_", M_, "%5.1f");
-file.prmat("[-] K_", K_, "%5.1f");
+file.prmat("[-] M", M, "%9.3f");
+file.prmat("[-] K", K, "%9.3f");
+file.prmat("[-] M_", M_, "%9.3f");
+file.prmat("[-] K_", K_, "%9.3f");
 for j = 1:n
     file.print("[*] w_%1.0f = %5.3f %5s", j, w(j), "rad/s");
     file.prvec(sprintf("[*] v_%1.0f", j), P(:, j), "%5.1f");
@@ -143,6 +143,7 @@ x_f = @(x) f_T_peak_range(n, w, M, f_C(n, m, na, f_ca(x)), K, k);
 x_options = optimoptions('fminimax');
 x_options.MaxIterations = 100;
 x_options.MaxFunctionEvaluations = 1000;
+x_options.Display = 'off';
 % Optimization Results
 [x, ~, ~] = fminimax(x_f, x_0, [], [], [], [], x_lb, [], [], x_options);
 % Absorber Dampings
@@ -166,12 +167,12 @@ file.print("~~~~~~~");
 file.print("[-] Elapsed Time: %5.1f s", c_elapsed);
 file.prvec("[-] Ia", Ia, "%7.3f");
 file.prvec("[-] na", na, "%7.0f");
-file.prmat("[-] M", M, "%7.1f");
-file.prmat("[-] K", K, "%7.1f");
+file.prmat("[-] M", M, "%9.3f");
+file.prmat("[-] K", K, "%9.3f");
 file.prvec("[-] x_0", x_0, "%7.3f");
 file.prvec("[-] x", x, "%7.3f");
 file.prvec("[-] ca", ca, "%7.3f");
-file.prmat("[-] C", C, "%7.1f");
+file.prmat("[-] C", C, "%9.3f");
 file.print("[-] %6s = %10.3f", "T_cr", T_cr);
 file.print("[-] %6s = %10.3f rad/s", "w_e_cr", w_e_cr);
 
@@ -234,9 +235,9 @@ file.prvec("[-] na", na, "%7.0f");
 file.prvec("[-] Ia", Ia, "%7.3f");
 file.prvec("[-] ca", ca, "%7.3f");
 if ~isinf(T_min)
-    file.prmat("[-] M", M, "%7.1f");
-    file.prmat("[-] C", C, "%7.1f");
-    file.prmat("[-] K", K, "%7.1f");
+    file.prmat("[-] M", M, "%9.3f");
+    file.prmat("[-] C", C, "%9.3f");
+    file.prmat("[-] K", K, "%9.3f");
     file.print("[-] %6s = %10.3f", "T_cr", T_cr);
     file.print("[-] %6s = %10.3f rad/s", "w_e_cr", w_e_cr);
 else
@@ -305,6 +306,7 @@ function [Ia, ca, T_min] = f_T_min(n, m, w, na, u, I, k)
     x_options = optimoptions('fminimax');
     x_options.MaxIterations = 100;
     x_options.MaxFunctionEvaluations = 1000;
+    x_options.Display = 'off';
     % Optimization Results
     [x, ~, x_maxfval] = fminimax(x_f, x_0, [], [], x_Aeq, x_beq, x_lb, [], [], x_options);
     % Absorber Inertias
@@ -323,15 +325,16 @@ function T_peak_range = f_T_peak_range(n, w, M, C, K, k)
         % Optimization Parameter Vector
         % [w_e]
         % Lower Bound
-        x_lb = w(j) - 0.01;
+        x_lb = w(j) * 0.95;
         % Upper Bound
-        x_ub = w(j) + 0.01;
+        x_ub = w(j);
         % Optimized Function
         x_f = @(x) -f_T(n, x, M, C, K, k);
         % Optimization Options
         x_options = optimset('fminbnd');
         x_options.MaxIterations = 100;
         x_options.MaxFunctionEvaluations = 1000;
+        x_options.Display = 'off';
         % Optimization Results
         [~, x_fval] = fminbnd(x_f, x_lb, x_ub, x_options);
         % Maximum Transmissibility
@@ -373,7 +376,7 @@ function plot_T_range(w_e_range, T_range, name, n, u)
 end
 
 % Get The User Input
-function x = ask(msg, x_min, x_max)
+function x = ask(msg, x_min, x_max, integer)
     while true
         x = input(msg);
         if isempty(x)
@@ -388,6 +391,9 @@ function x = ask(msg, x_min, x_max)
             fprintf(2, "The input is too big!\n");
         else
             break;
+        end
+        if ~isempty(integer) && integer
+            x = round(x);
         end
     end
 end
