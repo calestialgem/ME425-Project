@@ -51,24 +51,11 @@ Part A:
 
 Part B:
 ~~~~~~~
-[-] Elapsed Time:   1.0 s
+[-] Elapsed Time:   0.6 s
 
 Part C:
 ~~~~~~~
-[-] Elapsed Time:   1.0 s
-[!] Magnitude of the search direction was less than the specified tolerance, and the constraint violation was less than options.ConstraintTolerance!
-[?] Optimizer Output: 
-Local minimum possible. Constraints satisfied.
-
-fminimax stopped because the size of the current search direction is less than
-twice the value of the step size tolerance and constraints are 
-satisfied to within the value of the constraint tolerance.
-
-<stopping criteria details>
-
-Optimization stopped because the norm of the current search direction, 1.039036e-10,
-is less than 2*options.StepTolerance = 1.000000e-06, and the maximum constraint 
-violation, 2.205525e-10, is less than options.ConstraintTolerance = 1.000000e-06.
+[-] Elapsed Time:   0.8 s
 [-] Ia [2]:   0.100  0.100
 [-] na [2]:       1      5
 [-] M [7, 7]: 
@@ -101,21 +88,7 @@ violation, 2.205525e-10, is less than options.ConstraintTolerance = 1.000000e-06
 
 Part D:
 ~~~~~~~
-[-] Elapsed Time:   6.2 s
-[?] Fist Wrong Flag:
-[!] Magnitude of the directional derivative was less than the specified tolerance, and the constraint violation was less than options.ConstraintTolerance!
-[?] First Wrong Optimizer Output: 
-Local minimum possible. Constraints satisfied.
-
-fminimax stopped because the predicted change in the objective function
-is less than the value of the function tolerance and constraints 
-are satisfied to within the value of the constraint tolerance.
-
-<stopping criteria details>
-
-Optimization stopped because the predicted change in the objective function,
-2.926245e-08, is less than options.FunctionTolerance = 1.000000e-06, and the maximum constraint
-violation, 3.168191e-08, is less than options.ConstraintTolerance = 1.000000e-06.
+[-] Elapsed Time:   6.5 s
 [-] na [2]:       1      4
 [-] Ia [2]:   0.016  0.184
 [-] ca [2]:   0.970  0.897

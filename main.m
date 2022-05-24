@@ -134,7 +134,7 @@ x_options.MaxIterations = 100;
 x_options.MaxFunctionEvaluations = 1000;
 x_options.Display = 'iter';
 % Optimization Results
-[x, ~, ~, x_flag, x_output] = fminimax(x_f, x_0, [], [], [], [], x_lb, [], [], x_options);
+[x, ~, ~] = fminimax(x_f, x_0, [], [], [], [], x_lb, [], [], x_options);
 % Absorber Dampings
 ca = f_ca(x);
 % Damping Matrix
@@ -148,20 +148,6 @@ file.print("");
 file.print("Part C:");
 file.print("~~~~~~~");
 file.print("[-] Elapsed Time: %5.1f s", c_elapsed);
-if x_flag == 0
-    file.print("[!] Number of iterations exceeded options.MaxIterations or the number of function evaluations exceeded options.MaxFunctionEvaluations!");
-elseif x_flag == 4
-    file.print("[!] Magnitude of the search direction was less than the specified tolerance, and the constraint violation was less than options.ConstraintTolerance!");
-elseif x_flag == 5
-    file.print("[!] Magnitude of the directional derivative was less than the specified tolerance, and the constraint violation was less than options.ConstraintTolerance!");
-elseif x_flag == -1
-    file.print("[!] Stopped by an output function or plot function!");
-elseif x_flag == -2
-    file.print("[!] No feasible point was found!");
-elseif x_flag ~= 1
-    file.print("[!] An unknown error occured! Flag: %d", x_flag);
-end
-file.print("[?] Optimizer Output: \n%s", x_output.message);
 file.prvec("[-] Ia", Ia, "%7.3f");
 file.prvec("[-] na", na, "%7.0f");
 file.prmat("[-] M", M, "%7.1f");
@@ -185,10 +171,6 @@ Ia = zeros(m, 1);
 ca = zeros(m, 1);
 % Minimum Maximum Transmissibility
 T_minimax = Inf;
-% Optimizer Flag
-first_wrong_flag = [];
-% Optimizer Output
-first_wrong_output = [];
 % For all possible combinations...
 for na1 = 1:n - 1
     for na2 = na1 + 1:n
@@ -197,11 +179,7 @@ for na1 = 1:n - 1
         na_j(1) = na1;
         na_j(2) = na2;
         % Optimize
-        [Ia_j, ca_j, T_minimax_j, x_flag, x_output] = f_T_minimax(n, w_e_range, m, na_j, u, I, k);
-        if x_flag ~= 1 && isempty(first_wrong_flag)
-            first_wrong_flag = x_flag;
-            first_wrong_output = x_output;
-        end
+        [Ia_j, ca_j, T_minimax_j] = f_T_minimax(n, w_e_range, m, na_j, u, I, k);
         % ... replace if better.
         if T_minimax > T_minimax_j
             na = na_j;
@@ -228,23 +206,6 @@ file.print("");
 file.print("Part D:");
 file.print("~~~~~~~");
 file.print("[-] Elapsed Time: %5.1f s", c_elapsed);
-if ~isempty(first_wrong_flag)
-    file.print("[?] Fist Wrong Flag:")
-    if x_flag == 0
-        file.print("[!] Number of iterations exceeded options.MaxIterations or the number of function evaluations exceeded options.MaxFunctionEvaluations!");
-    elseif x_flag == 4
-        file.print("[!] Magnitude of the search direction was less than the specified tolerance, and the constraint violation was less than options.ConstraintTolerance!");
-    elseif x_flag == 5
-        file.print("[!] Magnitude of the directional derivative was less than the specified tolerance, and the constraint violation was less than options.ConstraintTolerance!");
-    elseif x_flag == -1
-        file.print("[!] Stopped by an output function or plot function!");
-    elseif x_flag == -2
-        file.print("[!] No feasible point was found!");
-    elseif x_flag ~= 1
-        file.print("[!] An unknown error occured! Flag: %d", x_flag);
-    end
-    file.print("[?] First Wrong Optimizer Output: \n%s", x_output.message);
-end
 file.prvec("[-] na", na, "%7.0f");
 file.prvec("[-] Ia", Ia, "%7.3f");
 file.prvec("[-] ca", ca, "%7.3f");
@@ -297,7 +258,7 @@ function K = f_K(n, m, k)
     end
 end
 
-function [Ia, ca, T_minimax, x_flag, x_output] = f_T_minimax(n, w_e_range, m, na, u, I, k)
+function [Ia, ca, T_minimax] = f_T_minimax(n, w_e_range, m, na, u, I, k)
     % Stiffness Matrix
     K = f_K(n, m, k);
     % Optimization Parameter Vector
@@ -319,7 +280,7 @@ function [Ia, ca, T_minimax, x_flag, x_output] = f_T_minimax(n, w_e_range, m, na
     x_options.MaxFunctionEvaluations = 1000;
     x_options.Display = 'iter';
     % Optimization Results
-    [x, ~, x_maxfval, x_flag, x_output] = fminimax(x_f, x_0, [], [], x_Aeq, x_beq, x_lb, [], [], x_options);
+    [x, ~, x_maxfval] = fminimax(x_f, x_0, [], [], x_Aeq, x_beq, x_lb, [], [], x_options);
     % Absorber Inertias
     Ia = f_Ia(x);
     % Absorber Dampings
