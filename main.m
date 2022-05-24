@@ -143,7 +143,6 @@ x_f = @(x) f_T_range(n, w_e_range, M, f_C(n, m, na, f_ca(x)), K, k);
 x_options = optimoptions('fminimax');
 x_options.MaxIterations = 100;
 x_options.MaxFunctionEvaluations = 1000;
-x_options.Display = 'iter';
 % Optimization Results
 [x, ~, ~] = fminimax(x_f, x_0, [], [], [], [], x_lb, [], [], x_options);
 % Surface Plot
@@ -322,7 +321,6 @@ function [Ia, ca, T_min] = f_T_min(n, w_e_range, m, na, u, I, k)
     x_options = optimoptions('fminimax');
     x_options.MaxIterations = 100;
     x_options.MaxFunctionEvaluations = 1000;
-    x_options.Display = 'iter';
     % Optimization Results
     [x, ~, x_maxfval] = fminimax(x_f, x_0, [], [], x_Aeq, x_beq, x_lb, [], [], x_options);
     % Absorber Inertias
