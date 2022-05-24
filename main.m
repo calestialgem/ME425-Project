@@ -81,7 +81,7 @@ for j = 1:n
     grid('on');
     title(sprintf("v_%.0f", j));
     ylim([-1 1]);
-    plot(1:n, P(j, :), '-o', 'LineWidth', 2);
+    plot(1:n, P(:, j), '-o', 'LineWidth', 2);
     yline(0, '--', 'LineWidth', 2);
 end
 saveas(gcf, "Part A Mode Shapes", 'jpeg');
@@ -98,7 +98,7 @@ file.prmat("[-] M_", M_, "%5.1f");
 file.prmat("[-] K_", K_, "%5.1f");
 for j = 1:n
     file.print("[*] w_%1.0f = %5.3f %5s", j, w(j), "rad/s");
-    file.prvec(sprintf("[*] v_%1.0f", j), P(j, :), "%5.1f");
+    file.prvec(sprintf("[*] v_%1.0f", j), P(:, j), "%5.1f");
 end
 
 % PART B ----------------------------------------------------------------------
