@@ -8,7 +8,9 @@ clc();
 print("me425 spring2022 project");
 print("atalay gecgel sipahioglu");
 
-% INPUT -----------------------------------------------------------------------
+% ------------------------------------------------------------------------------
+% INPUT ------------------------------------------------------------------------
+% ------------------------------------------------------------------------------
 
 % Number of Disks
 n_min = 2;
@@ -25,7 +27,9 @@ print("~~~~~~");
 print("[-] %1s = %4.0f %0s", "n", n, "");
 print("[-] %1s = %4.2f %0s", "u", u, "");
 
-% INITIAL CALCULATIONS --------------------------------------------------------
+% ------------------------------------------------------------------------------
+% INITIAL CALCULATIONS ---------------------------------------------------------
+% ------------------------------------------------------------------------------
 
 % Rotational Inertia of a Disk
 I = 100 / n;
@@ -38,7 +42,9 @@ print("~~~~~~~~~~~~~~~~~~~~~~");
 print("[-] %1s = %5.1f %0s", "I", I, "");
 print("[-] %1s = %5.1f %0s", "k", k, "");
 
-% PART A ----------------------------------------------------------------------
+% ------------------------------------------------------------------------------
+% PART A -----------------------------------------------------------------------
+% ------------------------------------------------------------------------------
 
 % Timer Start
 c_start = tic();
@@ -85,7 +91,9 @@ for j = 1:n
     prvec(sprintf("[*] v_%1.0f", j), P(:, j), "%5.1f");
 end
 
-% PART B ----------------------------------------------------------------------
+% ------------------------------------------------------------------------------
+% PART B -----------------------------------------------------------------------
+% ------------------------------------------------------------------------------
 
 % Timer Start
 c_start = tic();
@@ -98,7 +106,7 @@ T_range = f_T_range(n, w_e_range, M, f_C(n, 0, [], []), K, k);
 % Critical Frequency
 w_e_cr = w_e_range(j_cr);
 % Plot
-plot_T_range(w_e_range, T_range, 'Part B Transmissibility', n, u);
+plot_T_range(w_e_range, T_range, 'Part B Transmissibility');
 % Elapsed Time
 c_elapsed = toc(c_start);
 % Print
@@ -109,7 +117,9 @@ print("[-] Elapsed Time: %5.1f s", c_elapsed);
 print("[-] %6s = %10.3f", "T_cr", T_cr);
 print("[-] %6s = %10.3f rad/s", "w_e_cr", w_e_cr);
 
-% PART C ----------------------------------------------------------------------
+% ------------------------------------------------------------------------------
+% PART C -----------------------------------------------------------------------
+% ------------------------------------------------------------------------------
 
 % Timer Start
 c_start = tic();
@@ -154,7 +164,7 @@ T_range = f_T_range(n, w_e_range, M, C, K, k);
 % Critical Frequency
 w_e_cr = w_e_range(j_cr);
 % Plot
-plot_T_range(w_e_range, T_range, 'Part C Transmissibility', n, u);
+plot_T_range(w_e_range, T_range, 'Part C Transmissibility');
 % Elapsed Time
 c_elapsed = toc(c_start);
 % Print
@@ -173,7 +183,9 @@ prmat("[-] C", C, "%9.3f");
 print("[-] %6s = %10.3f", "T_cr", T_cr);
 print("[-] %6s = %10.3f rad/s", "w_e_cr", w_e_cr);
 
-% PART D ----------------------------------------------------------------------
+% ------------------------------------------------------------------------------
+% PART D -----------------------------------------------------------------------
+% ------------------------------------------------------------------------------
 
 % Timer Start
 c_start = tic();
@@ -219,7 +231,7 @@ if ~isinf(T_min)
     % Critical Frequency
     w_e_cr = w_e_range(j_cr);
     % Plot
-    plot_T_range(w_e_range, T_range, 'Part D Transmissibility', n, u);
+    plot_T_range(w_e_range, T_range, 'Part D Transmissibility');
 end
 % Elapsed Time
 c_elapsed = toc(c_start);
@@ -240,6 +252,10 @@ if ~isinf(T_min)
 else
     print("[!] Could not found even a single finite solution!");
 end
+
+% ------------------------------------------------------------------------------
+% SETUP FUNCTIONS --------------------------------------------------------------
+% ------------------------------------------------------------------------------
 
 % Inertia Matrix
 function M = f_M(n, m, I, Ia)
@@ -281,6 +297,10 @@ function K = f_K(n, m, k)
         end
     end
 end
+
+% ------------------------------------------------------------------------------
+% TRANSMISSIBILITY FUNCTIONS ---------------------------------------------------
+% ------------------------------------------------------------------------------
 
 % Minimum Transmissibility Design
 function [Ia, ca, T_min] = f_T_min(n, m, w, na, u, I, k)
@@ -356,8 +376,12 @@ function T = f_T(n, w_e, M, C, K, k)
     T = abs(a(1, n) * k);
 end
 
+% ------------------------------------------------------------------------------
+% CONVENIENCE FUNCTIONS --------------------------------------------------------
+% ------------------------------------------------------------------------------
+
 % Plot Transmisibility Range
-function plot_T_range(w_e_range, T_range, name, n, u)
+function plot_T_range(w_e_range, T_range, name)
     % Plot
     figure();
     set(gca, 'YScale', 'log');
@@ -393,10 +417,12 @@ function x = ask(msg, x_min, x_max, integer)
     end
 end
 
+% Print
 function print(varargin)
     fprintf('%s\n', sprintf(varargin{:}));
 end
 
+% Print Matrix
 function prmat(name, matrix, element)
     print("%s [%.0f, %.0f]: ", name, size(matrix, 1), size(matrix, 2));
     for k = 1:size(matrix, 1)
@@ -407,6 +433,7 @@ function prmat(name, matrix, element)
     end
 end
 
+% Print Vector
 function prvec(name, vector, element)
     fprintf("%s [%.0f]: ", name, length(vector));
     for k = 1:length(vector)
