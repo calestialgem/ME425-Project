@@ -13,7 +13,7 @@ Initial Caclculations:
 
 Part A:
 ~~~~~~~
-[-] Elapsed Time:   0.8 s
+[-] Elapsed Time:   0.7 s
 [-] M [5, 5]: 
    20    0    0    0    0
     0   20    0    0    0
@@ -51,13 +51,13 @@ Part A:
 
 Part B:
 ~~~~~~~
-[-] Elapsed Time:   0.5 s
+[-] Elapsed Time:   0.4 s
 [-]   T_cr = 26049079061206.246
 [-] w_e_cr =      4.797 rad/s
 
 Part C:
 ~~~~~~~
-[-] Elapsed Time:   2.7 s
+[-] Elapsed Time:   2.5 s
 [-] Ia [2]:   0.100  0.100
 [-] na [2]:       1      5
 [-] M [7, 7]: 
@@ -92,7 +92,7 @@ Part C:
 
 Part D:
 ~~~~~~~
-[-] Elapsed Time:   9.0 s
+[-] Elapsed Time:  11.3 s
 [-] na [2]:       4      5
 [-] Ia [2]:   0.000  0.200
 [-] ca [2]:   0.010  0.469

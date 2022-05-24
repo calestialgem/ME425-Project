@@ -92,8 +92,6 @@ end
 
 % Timer Start
 c_start = tic();
-% Maximum Excitation Frequency
-w_e_max = max(w) * 1.5;
 % Excitation Frequency Range
 w_e_range = max(w) * (10.^(-1:0.001:log10(1.5)));
 % Transmissibility Range
