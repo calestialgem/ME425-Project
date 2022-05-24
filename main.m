@@ -313,7 +313,7 @@ function plot_T_range(n, w_e_range, M, C, K, k, title)
     set(gca, 'XScale', 'log');
     hold('on');
     grid('on');
-    xlabel('\omega');
+    xlabel('\omega (rad/s)');
     ylabel('|\Theta_n/\Phi|');
     plot(w_e_range, f_T_max(n, w_e_range, M, C, K, k), 'LineWidth', 2);
     saveas(gcf, title, 'jpeg');
