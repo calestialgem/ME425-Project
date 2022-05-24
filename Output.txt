@@ -51,7 +51,7 @@ Part A:
 
 Part B:
 ~~~~~~~
-[-] Elapsed Time:   0.4 s
+[-] Elapsed Time:   0.5 s
 
 Part C:
 ~~~~~~~
