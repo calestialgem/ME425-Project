@@ -138,7 +138,7 @@ x_0 = [0.5, 0.5];
 % Lower Bound
 x_lb = [0, 0];
 % Optimized Function
-x_f = @(x) f_T_range(n, w_e_range, M, f_C(n, m, na, f_ca(x)), K, k);
+x_f = @(x) f_T_peak_range(n, w, M, f_C(n, m, na, f_ca(x)), K, k);
 % Optimization Options
 x_options = optimoptions('fminimax');
 x_options.MaxIterations = 100;
@@ -157,6 +157,8 @@ for j1 = 1:length(surf_X1)
     end
 end
 surf(surf_X1, surf_X2, surf_F);
+xlabel('c_{a,1}');
+ylabel('c_{a,2}');
 colorbar();
 name = sprintf("%s n=%.0f u=%.2f", "Part C Transmissibility Relationship", n, u);
 title(name);
@@ -213,7 +215,7 @@ for na1 = 1:n - 1
         na_j(1) = na1;
         na_j(2) = na2;
         % Optimize
-        [Ia_j, ca_j, T_min_j] = f_T_min(n, w_e_range, m, na_j, u, I, k);
+        [Ia_j, ca_j, T_min_j] = f_T_min(n, m, w, na_j, u, I, k);
         % ... replace if better.
         if T_min > T_min_j
             na = na_j;
@@ -301,7 +303,7 @@ function K = f_K(n, m, k)
 end
 
 % Minimum Transmissibility Design
-function [Ia, ca, T_min] = f_T_min(n, w_e_range, m, na, u, I, k)
+function [Ia, ca, T_min] = f_T_min(n, m, w, na, u, I, k)
     % Stiffness Matrix
     K = f_K(n, m, k);
     % Optimization Parameter Vector
@@ -313,7 +315,7 @@ function [Ia, ca, T_min] = f_T_min(n, w_e_range, m, na, u, I, k)
     % Lower Bound
     x_lb = [0, 0, 0, 0];
     % Optimized Function
-    x_f = @(x) f_T_range(n, w_e_range, f_M(n, m, I, f_Ia(x)), f_C(n, m, na, f_ca(x)), K, k);
+    x_f = @(x) f_T_peak_range(n, w, f_M(n, m, I, f_Ia(x)), f_C(n, m, na, f_ca(x)), K, k);
     % Linear Equality Constraint
     x_Aeq = [1, 1, 0, 0];
     x_beq = u;
@@ -329,6 +331,30 @@ function [Ia, ca, T_min] = f_T_min(n, w_e_range, m, na, u, I, k)
     ca = f_ca(x);
     % Minimized Maximum Transmissibility
     T_min = x_maxfval;
+end
+
+% Transmissibility Peak Range
+function T_peak_range = f_T_peak_range(n, w, M, C, K, k)
+    % Transmissibility Peak Range
+    T_peak_range = zeros(1, n);
+    for j = 1:n
+        % Optimization Parameter Vector
+        % [w_e]
+        % Lower Bound
+        x_lb = w(j) - 0.01;
+        % Upper Bound
+        x_ub = w(j) + 0.01;
+        % Optimized Function
+        x_f = @(x) -f_T(n, x, M, C, K, k);
+        % Optimization Options
+        x_options = optimset('fminbnd');
+        x_options.MaxIterations = 100;
+        x_options.MaxFunctionEvaluations = 1000;
+        % Optimization Results
+        [~, x_fval] = fminbnd(x_f, x_lb, x_ub, x_options);
+        % Maximum Transmissibility
+        T_peak_range(j) = -x_fval;
+    end
 end
 
 % Transmissibility Range
