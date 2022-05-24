@@ -70,8 +70,9 @@ for j = 1:n
     plot(1:n, P(:, j), '-o', 'LineWidth', 2);
     yline(0, '--', 'LineWidth', 2);
 end
-title("Part A Mode Shapes");
-saveas(gcf, "Part A Mode Shapes", 'jpeg');
+name = sprintf("%s n=%.0f u=%.2f", "Part A Mode Shapes", n, u);
+title(name);
+saveas(gcf, sprintf("%s.jpeg", name), 'jpeg');
 % Elapsed Time
 c_elapsed = toc(c_start);
 % Print
@@ -101,7 +102,7 @@ T_range = f_T_range(n, w_e_range, M, f_C(n, 0, [], []), K, k);
 % Critical Frequency
 w_e_cr = w_e_range(j_cr);
 % Plot
-plot_T_range(w_e_range, T_range, 'Part B Transmissibility');
+plot_T_range(w_e_range, T_range, 'Part B Transmissibility', n, u);
 % Elapsed Time
 c_elapsed = toc(c_start);
 % Print
@@ -159,8 +160,9 @@ for j1 = 1:length(surf_X1)
 end
 surf(surf_X1, surf_X2, surf_F);
 colorbar();
-title("Part C Transmissibility Relationship");
-saveas(gcf, "Part C Transmissibility Relationship", 'jpeg');
+name = sprintf("%s n=%.0f u=%.2f", "Part C Transmissibility Relationship", n, u);
+title(name);
+saveas(gcf, sprintf("%s.jpeg", name), 'jpeg');
 % Absorber Dampings
 ca = f_ca(x);
 % Damping Matrix
@@ -172,7 +174,7 @@ T_range = f_T_range(n, w_e_range, M, C, K, k);
 % Critical Frequency
 w_e_cr = w_e_range(j_cr);
 % Plot
-plot_T_range(w_e_range, T_range, 'Part C Transmissibility');
+plot_T_range(w_e_range, T_range, 'Part C Transmissibility', n, u);
 % Elapsed Time
 c_elapsed = toc(c_start);
 % Print
@@ -237,7 +239,7 @@ if ~isinf(T_min)
     % Critical Frequency
     w_e_cr = w_e_range(j_cr);
     % Plot
-    plot_T_range(w_e_range, T_range, 'Part D Transmissibility');
+    plot_T_range(w_e_range, T_range, 'Part D Transmissibility', n, u);
 end
 % Elapsed Time
 c_elapsed = toc(c_start);
@@ -350,7 +352,7 @@ function T = f_T(n, w_e, M, C, K, k)
 end
 
 % Plot Transmisibility Range
-function plot_T_range(w_e_range, T_range, name)
+function plot_T_range(w_e_range, T_range, name, n, u)
     % Plot
     figure();
     set(gca, 'YScale', 'log');
@@ -360,6 +362,7 @@ function plot_T_range(w_e_range, T_range, name)
     xlabel('\omega (rad/s)');
     ylabel('|\Theta_n/\Phi|');
     plot(w_e_range, T_range, 'LineWidth', 2);
+    name = sprintf("%s n=%.0f u=%.2f", name, n, u);
     title(name);
-    saveas(gcf, name, 'jpeg');
+    saveas(gcf, sprintf("%s.jpeg", name), 'jpeg');
 end
