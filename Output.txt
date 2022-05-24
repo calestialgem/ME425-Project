@@ -57,7 +57,7 @@ Part B:
 
 Part C:
 ~~~~~~~
-[-] Elapsed Time:   2.4 s
+[-] Elapsed Time:   1.1 s
 [-] Ia [2]:   0.150  0.150
 [-] na [2]:       1      5
 [-] M [7, 7]: 
@@ -92,7 +92,7 @@ Part C:
 
 Part D:
 ~~~~~~~
-[-] Elapsed Time:   4.2 s
+[-] Elapsed Time:   4.1 s
 [-] na [2]:       1      5
 [-] Ia [2]:   0.000  0.300
 [-] ca [2]:   0.000  0.213

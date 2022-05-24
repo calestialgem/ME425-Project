@@ -145,24 +145,6 @@ x_options.MaxIterations = 100;
 x_options.MaxFunctionEvaluations = 1000;
 % Optimization Results
 [x, ~, ~] = fminimax(x_f, x_0, [], [], [], [], x_lb, [], [], x_options);
-% Surface Plot
-figure();
-hold('on');
-surf_X1 = (0.5:0.1:1.5) * x(1);
-surf_X2 = (0.5:0.1:1.5) * x(2);
-surf_F = zeros(length(surf_X1), length(surf_X2));
-for j1 = 1:length(surf_X1)
-    for j2 = 1:length(surf_X2)
-        surf_F(j1, j2) = max(x_f([surf_X1(j1), surf_X2(j2)]));
-    end
-end
-surf(surf_X1, surf_X2, surf_F);
-xlabel('c_{a,1}');
-ylabel('c_{a,2}');
-colorbar();
-name = sprintf("%s n=%.0f u=%.2f", "Part C Transmissibility Relationship", n, u);
-title(name);
-saveas(gcf, sprintf("%s.jpeg", name), 'jpeg');
 % Absorber Dampings
 ca = f_ca(x);
 % Damping Matrix
@@ -388,4 +370,24 @@ function plot_T_range(w_e_range, T_range, name, n, u)
     name = sprintf("%s n=%.0f u=%.2f", name, n, u);
     title(name);
     saveas(gcf, sprintf("%s.jpeg", name), 'jpeg');
+end
+
+% Get The User Input
+function x = ask(msg, x_min, x_max)
+    while true
+        x = input(msg);
+        if isempty(x)
+            fprintf(2, "No input!\n");
+        elseif ischar(x) || isstring(x)
+            fprintf(2, "The input is a string!\n")
+        elseif ~isscalar(x)
+            fprintf(2, "The input is not a scalar!\n")
+        elseif x < x_min
+            fprintf(2, "The input is too small!\n");
+        elseif x > x_max
+            fprintf(2, "The input is too big!\n");
+        else
+            break;
+        end
+    end
 end
