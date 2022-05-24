@@ -79,7 +79,7 @@ for j = 1:n
     nexttile();
     hold('on');
     grid('on');
-    title(sprintf("v_%.0f", j));
+    title(sprintf("\\omega_%.0f=%5.3f rad/s", j, w(j)));
     ylim([-1 1]);
     plot(1:n, P(:, j), '-o', 'LineWidth', 2);
     yline(0, '--', 'LineWidth', 2);
