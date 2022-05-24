@@ -71,7 +71,6 @@ for j = 1:n
     yline(0, '--', 'LineWidth', 2);
 end
 name = sprintf("%s n=%.0f u=%.2f", "Part A Mode Shapes", n, u);
-title(name);
 saveas(gcf, sprintf("%s.jpeg", name), 'jpeg');
 % Elapsed Time
 c_elapsed = toc(c_start);
