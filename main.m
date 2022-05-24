@@ -84,6 +84,7 @@ for j = 1:n
     plot(1:n, P(:, j), '-o', 'LineWidth', 2);
     yline(0, '--', 'LineWidth', 2);
 end
+title("Part A Mode Shapes");
 saveas(gcf, "Part A Mode Shapes", 'jpeg');
 % Elapsed Time
 c_elapsed = toc(c_start);
@@ -161,6 +162,21 @@ x_options.MaxFunctionEvaluations = 1000;
 x_options.Display = 'iter';
 % Optimization Results
 [x, ~, ~] = fminimax(x_f, x_0, [], [], [], [], x_lb, [], [], x_options);
+% Surface Plot
+figure();
+hold('on');
+surf_X1 = (0.5:0.1:1.5) * x(1);
+surf_X2 = (0.5:0.1:1.5) * x(2);
+surf_F = zeros(length(surf_X1), length(surf_X2));
+for j1 = 1:length(surf_X1)
+    for j2 = 1:length(surf_X2)
+        surf_F(j1, j2) = max(x_f([surf_X1(j1), surf_X2(j2)]));
+    end
+end
+surf(surf_X1, surf_X2, surf_F);
+colorbar();
+title("Part C Transmissibility Relationship");
+saveas(gcf, "Part C Transmissibility Relationship", 'jpeg');
 % Absorber Dampings
 ca = f_ca(x);
 % Damping Matrix
@@ -350,7 +366,7 @@ function T = f_T(n, w_e, M, C, K, k)
 end
 
 % Plot Transmisibility Range
-function plot_T_range(w_e_range, T_range, title)
+function plot_T_range(w_e_range, T_range, name)
     % Plot
     figure();
     set(gca, 'YScale', 'log');
@@ -360,5 +376,6 @@ function plot_T_range(w_e_range, T_range, title)
     xlabel('\omega (rad/s)');
     ylabel('|\Theta_n/\Phi|');
     plot(w_e_range, T_range, 'LineWidth', 2);
-    saveas(gcf, title, 'jpeg');
+    title(name);
+    saveas(gcf, name, 'jpeg');
 end

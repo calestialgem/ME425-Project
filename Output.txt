@@ -13,7 +13,7 @@ Initial Caclculations:
 
 Part A:
 ~~~~~~~
-[-] Elapsed Time:   1.0 s
+[-] Elapsed Time:   0.7 s
 [-] M [5, 5]: 
    20    0    0    0    0
     0   20    0    0    0
@@ -57,7 +57,7 @@ Part B:
 
 Part C:
 ~~~~~~~
-[-] Elapsed Time:   1.5 s
+[-] Elapsed Time:   3.3 s
 [-] Ia [2]:   0.100  0.100
 [-] na [2]:       1      5
 [-] M [7, 7]: 
@@ -92,7 +92,7 @@ Part C:
 
 Part D:
 ~~~~~~~
-[-] Elapsed Time:  10.9 s
+[-] Elapsed Time:   9.8 s
 [-] na [2]:       4      5
 [-] Ia [2]:   0.000  0.200
 [-] ca [2]:   0.010  0.469
