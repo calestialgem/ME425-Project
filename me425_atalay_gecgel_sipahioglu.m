@@ -142,7 +142,7 @@ T_range = f_T_range(n, w_e_range, M, f_C(n, 0, [], []), K, k);
 w_e_cr = w_e_range(j_cr);
 
 % Plot
-plot_T_range(w_e_range, T_range, sprintf("Part B Transmissibility n=%.0f u=%.2f", n, u));
+plot_T_range(w_e_range, T_range, "Part B Transmissibility", n, u);
 
 % Elapsed Time
 c_elapsed = toc(c_start);
@@ -225,7 +225,7 @@ T_range = f_T_range(n, w_e_range, M, C, K, k);
 w_e_cr = w_e_range(j_cr);
 
 % Plot
-plot_T_range(w_e_range, T_range, sprintf("Part C Transmissibility n=%.0f u=%.2f", n, u));
+plot_T_range(w_e_range, T_range, "Part C Transmissibility", n, u);
 
 % Elapsed Time
 c_elapsed = toc(c_start);
@@ -309,7 +309,7 @@ if ~isinf(T_min)
     w_e_cr = w_e_range(j_cr);
 
     % Plot
-    plot_T_range(w_e_range, T_range, sprintf("Part D Transmissibility n=%.0f u=%.2f", n, u));
+    plot_T_range(w_e_range, T_range, "Part D Transmissibility", n, u);
 end
 
 % Elapsed Time
@@ -491,7 +491,7 @@ end
 % ------------------------------------------------------------------------------
 
 % For plotting the transmissibility over a range of excitation frequencies.
-function plot_T_range(w_e_range, T_range, name)
+function plot_T_range(w_e_range, T_range, name, n, u)
     % Plot
     figure();
     set(gca, 'YScale', 'log');
@@ -502,7 +502,7 @@ function plot_T_range(w_e_range, T_range, name)
     ylabel('|\Theta_n/\Phi|');
     plot(w_e_range, T_range, 'LineWidth', 2);
     title(name);
-    saveas(gcf, sprintf("%s.jpeg", name), 'jpeg');
+    saveas(gcf, sprintf("%s n=%.0f u=%.2f.jpeg", name, n, u), 'jpeg');
 end
 
 % For getting valid and checked user input.
