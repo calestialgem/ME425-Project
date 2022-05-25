@@ -5,9 +5,9 @@
 \begin{tikzpicture}
 
 \begin{axis}[%
-width=4.521in,
-height=3.566in,
-at={(0.758in,0.481in)},
+width=0.475\textwidth,
+height=0.5\textwidth,
+at={(0\textwidth,0\textwidth)},
 scale only axis,
 xmode=log,
 xmin=0.270290660370726,
