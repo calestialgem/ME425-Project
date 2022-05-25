@@ -74,6 +74,8 @@ M_ = M^(-1/2);
 K_ = M_ * K * M_;
 
 % Eigenvector and Eigenvalue Matrix
+% Eigenvectors are the mode shapes.
+% Eigenvalues are the squares of the natural frequencies.
 [P, L] = eig(K_);
 
 % Natural Frequencies in rad/s
