@@ -145,7 +145,7 @@ x_0 = [0.5, 0.5];
 % Lower Bound
 x_lb = [0, 0];
 % Optimized Function
-x_f = @(x) f_T_peak_range(n, w, M, f_C(n, m, na, f_ca(x)), K, k);
+x_f = @(x) f_T_peaks(n, w, M, f_C(n, m, na, f_ca(x)), K, k);
 % Optimization Options
 x_options = optimoptions('fminimax');
 x_options.MaxIterations = 100;
@@ -257,7 +257,8 @@ end
 % SETUP FUNCTIONS --------------------------------------------------------------
 % ------------------------------------------------------------------------------
 
-% Inertia Matrix
+% For creating the inertia matrix. In the case with no absorbers give `m` as
+% `0`, `Ia` as `[]`.
 function M = f_M(n, m, I, Ia)
     % Inertia Matrix
     M = zeros(n + m);
@@ -269,7 +270,8 @@ function M = f_M(n, m, I, Ia)
     end
 end
 
-% Damping Matrix
+% For creating the damping matrix. In the case with no absorbers give `m` as
+% `0`, `na` and `ca` as `[]`. The resulting matrix will be just zeros.
 function C = f_C(n, m, na, ca)
     % Damping Matrix
     C = zeros(n + m);
@@ -281,7 +283,8 @@ function C = f_C(n, m, na, ca)
     end
 end
 
-% Stiffness Matrix
+% For creating the stiffness matrix. In the case with no absorbers give `m` as
+% `0`.
 function K = f_K(n, m, k)
     % Stiffness Matrix
     K = zeros(n + m);
@@ -302,7 +305,10 @@ end
 % TRANSMISSIBILITY FUNCTIONS ---------------------------------------------------
 % ------------------------------------------------------------------------------
 
-% Minimum Transmissibility Design
+% For designing the absorbers in part D. Minimizes the maximum of the peaks
+% using `fminimax` and returns the optimum parameters. Only needs to know the
+% positions of the absorbers. The combination of all possible absorber positions
+% can be iterated over to get the best desing.
 function [Ia, ca, T_min] = f_T_min(n, m, w, na, u, I, k)
     % Stiffness Matrix
     K = f_K(n, m, k);
@@ -315,7 +321,7 @@ function [Ia, ca, T_min] = f_T_min(n, m, w, na, u, I, k)
     % Lower Bound
     x_lb = [0, 0, 0, 0];
     % Optimized Function
-    x_f = @(x) f_T_peak_range(n, w, f_M(n, m, I, f_Ia(x)), f_C(n, m, na, f_ca(x)), K, k);
+    x_f = @(x) f_T_peaks(n, w, f_M(n, m, I, f_Ia(x)), f_C(n, m, na, f_ca(x)), K, k);
     % Linear Equality Constraint
     x_Aeq = [1, 1, 0, 0];
     x_beq = u;
@@ -334,10 +340,15 @@ function [Ia, ca, T_min] = f_T_min(n, m, w, na, u, I, k)
     T_min = x_maxfval;
 end
 
-% Transmissibility Peak Range
-function T_peak_range = f_T_peak_range(n, w, M, C, K, k)
-    % Transmissibility Peak Range
-    T_peak_range = zeros(1, n);
+% For finding the peaks in the transmissibility plot very fast and secure. It
+% always returns the peaks because it uses the natural frequencies. With the
+% damping the peaks shift to left slightly. Looks for the peaks via iterating
+% over the natural frequencies and using `fminbnd` starting from the 95% of the
+% natural frequency to 100% of it. Fast because it looks for a very small
+% window. Guaranteed to find the peaks because it does not do grid search.
+function T_peaks = f_T_peaks(n, w, M, C, K, k)
+    % Transmissibility Peaks
+    T_peaks = zeros(1, n);
     for j = 1:n
         % Optimization Parameter Vector
         % [w_e]
@@ -355,11 +366,12 @@ function T_peak_range = f_T_peak_range(n, w, M, C, K, k)
         % Optimization Results
         [~, x_fval] = fminbnd(x_f, x_lb, x_ub, x_options);
         % Maximum Transmissibility
-        T_peak_range(j) = -x_fval;
+        T_peaks(j) = -x_fval;
     end
 end
 
-% Transmissibility Range
+% For calculating a range of transmissibilities for the given range of
+% excitation frequencies.
 function T_range = f_T_range(n, w_e_range, M, C, K, k)
     % Transmissibility Range
     T_range = zeros(size(w_e_range));
@@ -368,7 +380,9 @@ function T_range = f_T_range(n, w_e_range, M, C, K, k)
     end
 end
 
-% Transmissibility
+% For calculating the transmissibility of the last disk for the given excitation
+% frequency. Very fast because it only uses the necessary element of the
+% receptance matrix.
 function T = f_T(n, w_e, M, C, K, k)
     % Receptance Matrix
     a = (-w_e^2 * M + 1i * w_e * C + K)^ - 1;
@@ -380,7 +394,7 @@ end
 % CONVENIENCE FUNCTIONS --------------------------------------------------------
 % ------------------------------------------------------------------------------
 
-% Plot Transmisibility Range
+% For plotting the transmissibility over a range of excitation frequencies.
 function plot_T_range(w_e_range, T_range, name)
     % Plot
     figure();
@@ -394,7 +408,7 @@ function plot_T_range(w_e_range, T_range, name)
     title(name);
 end
 
-% Get The User Input
+% For getting valid and checked user input.
 function x = ask(msg, x_min, x_max, integer)
     while true
         x = input(msg);
@@ -417,12 +431,12 @@ function x = ask(msg, x_min, x_max, integer)
     end
 end
 
-% Print
+% For easier general printing. Puts new line at the start.
 function print(varargin)
     fprintf('%s\n', sprintf(varargin{:}));
 end
 
-% Print Matrix
+% For printing matrices.
 function prmat(name, matrix, element)
     print("%s [%.0f, %.0f]: ", name, size(matrix, 1), size(matrix, 2));
     for k = 1:size(matrix, 1)
@@ -433,7 +447,7 @@ function prmat(name, matrix, element)
     end
 end
 
-% Print Vector
+% For printing vectors.
 function prvec(name, vector, element)
     fprintf("%s [%.0f]: ", name, length(vector));
     for k = 1:length(vector)
