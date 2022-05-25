@@ -1,0 +1,105 @@
+% This file was created by matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.00000,0.44700,0.74100}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=0.356\textwidth,
+height=0.083\textwidth,
+at={(0\textwidth,0.117\textwidth)},
+scale only axis,
+xmin=1,
+xmax=3,
+ymin=-1,
+ymax=1,
+axis background/.style={fill=white},
+title style={font=\bfseries},
+title={$\omega{}_\text{1}\text{=0.668 rad/s}$},
+axis x line*=bottom,
+axis y line*=left,
+xmajorgrids,
+ymajorgrids,
+ylabel style={font=\small},
+xlabel style={font=\small}
+]
+\addplot [color=mycolor1, line width=2.0pt, mark=o, mark options={solid, mycolor1}, forget plot]
+  table[row sep=crcr]{%
+1	-0.327985277605682\\
+2	-0.591009048506104\\
+3	-0.736976229099578\\
+};
+\addplot [color=black, dashed, line width=2.0pt, forget plot]
+  table[row sep=crcr]{%
+1	0\\
+2	0\\
+3	0\\
+};
+\end{axis}
+
+\begin{axis}[%
+width=0.356\textwidth,
+height=0.083\textwidth,
+at={(0.513\textwidth,0.117\textwidth)},
+scale only axis,
+xmin=1,
+xmax=3,
+ymin=-1,
+ymax=1,
+axis background/.style={fill=white},
+title style={font=\bfseries},
+title={$\omega{}_\text{2}\text{=1.870 rad/s}$},
+axis x line*=bottom,
+axis y line*=left,
+xmajorgrids,
+ymajorgrids,
+ylabel style={font=\small},
+xlabel style={font=\small}
+]
+\addplot [color=mycolor1, line width=2.0pt, mark=o, mark options={solid, mycolor1}, forget plot]
+  table[row sep=crcr]{%
+1	0.736976229099578\\
+2	0.327985277605682\\
+3	-0.591009048506104\\
+};
+\addplot [color=black, dashed, line width=2.0pt, forget plot]
+  table[row sep=crcr]{%
+1	0\\
+2	0\\
+3	0\\
+};
+\end{axis}
+
+\begin{axis}[%
+width=0.356\textwidth,
+height=0.083\textwidth,
+at={(0\textwidth,0\textwidth)},
+scale only axis,
+xmin=1,
+xmax=3,
+ymin=-1,
+ymax=1,
+axis background/.style={fill=white},
+title style={font=\bfseries},
+title={$\omega{}_\text{3}\text{=2.703 rad/s}$},
+axis x line*=bottom,
+axis y line*=left,
+xmajorgrids,
+ymajorgrids,
+ylabel style={font=\small},
+xlabel style={font=\small}
+]
+\addplot [color=mycolor1, line width=2.0pt, mark=o, mark options={solid, mycolor1}, forget plot]
+  table[row sep=crcr]{%
+1	-0.591009048506104\\
+2	0.736976229099578\\
+3	-0.327985277605682\\
+};
+\addplot [color=black, dashed, line width=2.0pt, forget plot]
+  table[row sep=crcr]{%
+1	0\\
+2	0\\
+3	0\\
+};
+\end{axis}
+\end{tikzpicture}%
