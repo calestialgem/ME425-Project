@@ -31,6 +31,14 @@ xlabel style={font=\small}
 4	0.54852873198059\\
 5	0.596884787666842\\
 };
+\addplot [color=black, dashed, line width=2.0pt, forget plot]
+  table[row sep=crcr]{%
+1	0\\
+2	0\\
+3	0\\
+4	0\\
+5	0\\
+};
 \end{axis}
 
 \begin{axis}[%
@@ -59,6 +67,14 @@ xlabel style={font=\small}
 3	-0.326018679609317\\
 4	0.169891124049181\\
 5	0.548528731980589\\
+};
+\addplot [color=black, dashed, line width=2.0pt, forget plot]
+  table[row sep=crcr]{%
+1	0\\
+2	0\\
+3	0\\
+4	0\\
+5	0\\
 };
 \end{axis}
 
@@ -89,6 +105,14 @@ xlabel style={font=\small}
 4	-0.326018679609317\\
 5	0.45573414065525\\
 };
+\addplot [color=black, dashed, line width=2.0pt, forget plot]
+  table[row sep=crcr]{%
+1	0\\
+2	0\\
+3	0\\
+4	0\\
+5	0\\
+};
 \end{axis}
 
 \begin{axis}[%
@@ -118,6 +142,14 @@ xlabel style={font=\small}
 4	0.596884787666841\\
 5	-0.326018679609317\\
 };
+\addplot [color=black, dashed, line width=2.0pt, forget plot]
+  table[row sep=crcr]{%
+1	0\\
+2	0\\
+3	0\\
+4	0\\
+5	0\\
+};
 \end{axis}
 
 \begin{axis}[%
@@ -146,6 +178,14 @@ xlabel style={font=\small}
 3	-0.596884787666841\\
 4	0.45573414065525\\
 5	-0.169891124049181\\
+};
+\addplot [color=black, dashed, line width=2.0pt, forget plot]
+  table[row sep=crcr]{%
+1	0\\
+2	0\\
+3	0\\
+4	0\\
+5	0\\
 };
 \end{axis}
 \end{tikzpicture}%

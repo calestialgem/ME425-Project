@@ -91,7 +91,7 @@ for j = 1:n
     title(sprintf("\\omega_%.0f=%5.3f rad/s", j, w(j)));
     ylim([-1 1]);
     plot(1:n, P(:, j), '-o', 'LineWidth', 2);
-    yline(0, '--', 'LineWidth', 2);
+    plot(1:n, zeros(1, n), 'k--', 'LineWidth', 2);
 end
 matlab2tikz(sprintf('%s n=%.0f u=%.2f.tikz', "Part A Mode Shapes", n, u), ...
     'height', '0.2\textwidth', ...
