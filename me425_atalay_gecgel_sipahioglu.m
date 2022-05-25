@@ -200,21 +200,17 @@ ca = zeros(m, 1);
 % Minimum Maximum Transmissibility
 T_min = Inf;
 % For all possible combinations...
-for na1 = 1:n - 1
-    for na2 = na1 + 1:n
-        % Absorber Positions (Assumed to be unique for each absorber.)
-        na_j = zeros(m, 1);
-        na_j(1) = na1;
-        na_j(2) = na2;
-        % Optimize
-        [Ia_j, ca_j, T_min_j] = f_T_min(n, m, w, na_j, u, I, k);
-        % ... replace if better.
-        if T_min > T_min_j
-            na = na_j;
-            Ia = Ia_j;
-            ca = ca_j;
-            T_min = T_min_j;
-        end
+na_combinations = nchoosek(1:n, m);
+for j = size(na_combinations, 1)
+    na_j = na_combinations(j, :);
+    % Optimize
+    [Ia_j, ca_j, T_min_j] = f_T_min(n, m, w, na_j, u, I, k);
+    % ... replace if better.
+    if T_min > T_min_j
+        na = na_j;
+        Ia = Ia_j;
+        ca = ca_j;
+        T_min = T_min_j;
     end
 end
 if ~isinf(T_min)
