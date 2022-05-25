@@ -93,6 +93,13 @@ for j = 1:n
     plot(1:n, P(:, j), '-o', 'LineWidth', 2);
     yline(0, '--', 'LineWidth', 2);
 end
+matlab2tikz(sprintf('%s n=%.0f u=%.2f.tikz', "Part A Mode Shapes", n, u), ...
+    'height', '0.2\textwidth', ...
+    'width', '0.9\textwidth', ...
+    'extraAxisOptions', ...
+    {'ylabel style={font=\small}', ...
+    'xlabel style={font=\small}'}, ...
+    'showInfo', false);
 
 % Elapsed Time
 c_elapsed = toc(c_start);
@@ -131,7 +138,7 @@ w_e_range = max(w) * (10.^(-1:0.001:log10(1.5)));
 C = f_C(n, 0, [], []);
 
 % Plot Transmissibility Range
-plot_T_range(n, w_e_range, M, C, K, k, "Part B Transmissibility");
+plot_T_range(n, u, w_e_range, M, C, K, k, "Part B Transmissibility");
 
 % Elapsed Time
 c_elapsed = toc(c_start);
@@ -207,7 +214,7 @@ T_min = x_maxfval;
 C = f_C(n, m, na, ca);
 
 % Plot Transmissibility Range
-plot_T_range(n, w_e_range, M, C, K, k, "Part C Transmissibility");
+plot_T_range(n, u, w_e_range, M, C, K, k, "Part C Transmissibility");
 
 % Elapsed Time
 c_elapsed = toc(c_start);
@@ -281,7 +288,7 @@ if ~isinf(T_min)
     K = f_K(n, m, k);
 
     % Plot Transmissibility Range
-    plot_T_range(n, w_e_range, M, C, K, k, "Part D Transmissibility");
+    plot_T_range(n, u, w_e_range, M, C, K, k, "Part D Transmissibility");
 end
 
 % Elapsed Time
@@ -463,7 +470,7 @@ end
 % ------------------------------------------------------------------------------
 
 % For plotting the transmissibility over a range of excitation frequencies.
-function plot_T_range(n, w_e_range, M, C, K, k, name)
+function plot_T_range(n, u, w_e_range, M, C, K, k, name)
     % Plot
     figure();
     set(gca, 'YScale', 'log');
@@ -474,6 +481,13 @@ function plot_T_range(n, w_e_range, M, C, K, k, name)
     ylabel('|\Theta_n/\Phi|');
     plot(w_e_range, f_T_range(n, w_e_range, M, C, K, k), 'LineWidth', 2);
     title(name);
+    matlab2tikz(sprintf('%s n=%.0f u=%.2f.tikz', name, n, u), ...
+        'height', '0.2\textwidth', ...
+        'width', '0.9\textwidth', ...
+        'extraAxisOptions', ...
+        {'ylabel style={font=\small}', ...
+        'xlabel style={font=\small}'}, ...
+        'showInfo', false);
 end
 
 % For easier general printing. Puts new line at the start.
