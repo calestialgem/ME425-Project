@@ -14,22 +14,18 @@ print("atalay gecgel sipahioglu");
 
 % Get the n and u from the user.
 
-% Number of Disks
-n_min = 2;
-n_max = 5;
-n = ask(sprintf("\nEnter %1s in [%1.0f, %1.0f] %0s: ", "n", n_min, n_max, ""), n_min, n_max, true);
+% Number of Disks (Min: 2, Max: 5)
+n = 5;
 
-% Total Houdaille Damper Viscosity
-u_min = 0.1;
-u_max = 0.3;
-u = ask(sprintf("\nEnter %1s in [%3.1f, %3.1f] %0s: ", "u", u_min, u_max, ""), u_min, u_max);
+% Total Houdaille Damper Viscosity (Min: 0.1, Max: 0.3)
+u = 0.3;
 
 % Print
 print("");
 print("Input:");
 print("~~~~~~");
-print("[-] %1s = %4.0f %0s", "n", n, "");
-print("[-] %1s = %4.2f %0s", "u", u, "");
+print("[-] n = %4.0f", n);
+print("[-] u = %4.2f", u);
 
 % ------------------------------------------------------------------------------
 % INITIAL CALCULATIONS ---------------------------------------------------------
@@ -48,8 +44,8 @@ k = 25 * n;
 print("");
 print("Initial Caclculations:");
 print("~~~~~~~~~~~~~~~~~~~~~~");
-print("[-] %1s = %5.1f %0s", "I", I, "");
-print("[-] %1s = %5.1f %0s", "k", k, "");
+print("[-] I = %5.1f", I);
+print("[-] k = %5.1f", k);
 
 % ------------------------------------------------------------------------------
 % PART A -----------------------------------------------------------------------
@@ -97,8 +93,6 @@ for j = 1:n
     plot(1:n, P(:, j), '-o', 'LineWidth', 2);
     yline(0, '--', 'LineWidth', 2);
 end
-name = sprintf("%s n=%.0f u=%.2f", "Part A Mode Shapes", n, u);
-saveas(gcf, sprintf("%s.jpeg", name), 'jpeg');
 
 % Elapsed Time
 c_elapsed = toc(c_start);
@@ -107,13 +101,13 @@ c_elapsed = toc(c_start);
 print("");
 print("Part A:");
 print("~~~~~~~");
-print("[-] Elapsed Time: %5.1f s", c_elapsed);
+print("[-] Elapsed Time: %5.2f s", c_elapsed);
 prmat("[-] M", M, "%9.3f");
 prmat("[-] K", K, "%9.3f");
 prmat("[-] M_", M_, "%9.3f");
 prmat("[-] K_", K_, "%9.3f");
 for j = 1:n
-    print("[*] w_%1.0f = %5.3f %5s", j, w(j), "rad/s");
+    print("[*] w_%1.0f = %5.3f rad/s", j, w(j));
     prvec(sprintf("[*] v_%1.0f", j), P(:, j), "%5.1f");
 end
 
@@ -124,7 +118,7 @@ end
 % Construct the range of excitation frequencies and find the transmissibilities
 % using the repectance matrix.
 % Note: using `w`, `n`, `M`, `K`, `k` from the previous part.
-% Note: using functions `f_T_range`, `f_C` that are defined at the end.
+% Note: using functions `f_C`, `f_T_peaks` that are defined at the end.
 
 % Timer Start
 c_start = tic();
@@ -132,17 +126,12 @@ c_start = tic();
 % Excitation Frequency Range
 w_e_range = max(w) * (10.^(-1:0.001:log10(1.5)));
 
-% Transmissibility Range
-T_range = f_T_range(n, w_e_range, M, f_C(n, 0, [], []), K, k);
+% Damping Matrix
+% This is just a zero matrix in this
+C = f_C(n, 0, [], []);
 
-% Critical Transmissibility Point
-[T_cr, j_cr] = max(T_range);
-
-% Critical Frequency
-w_e_cr = w_e_range(j_cr);
-
-% Plot
-plot_T_range(w_e_range, T_range, "Part B Transmissibility", n, u);
+% Plot Transmissibility Range
+plot_T_range(n, w_e_range, M, C, K, k, "Part B Transmissibility");
 
 % Elapsed Time
 c_elapsed = toc(c_start);
@@ -151,9 +140,8 @@ c_elapsed = toc(c_start);
 print("");
 print("Part B:");
 print("~~~~~~~");
-print("[-] Elapsed Time: %5.1f s", c_elapsed);
-print("[-] %6s = %10.3f", "T_cr", T_cr);
-print("[-] %6s = %10.3f rad/s", "w_e_cr", w_e_cr);
+print("[-] Elapsed Time: %5.2f s", c_elapsed);
+print("[-] T_max = %.3f", max(f_T_peaks(n, w, M, C, K, k)));
 
 % ------------------------------------------------------------------------------
 % PART C -----------------------------------------------------------------------
@@ -162,8 +150,8 @@ print("[-] %6s = %10.3f rad/s", "w_e_cr", w_e_cr);
 % Optimize the maximum of the peaks in the transmissibility for the damping
 % coefficients of the absorbers which are connected to 1 and 5.
 % Note: using `u`, `n`, `I`, `k`, `w`, `w_e_range` from the previous part.
-% Note: using functions `f_M`, `f_K`, `f_T_peaks`, `f_C`, `f_T_range` that are
-% defined at the end.
+% Note: using functions `f_M`, `f_K`, `f_T_peaks`, `f_C` that are defined at the
+% end.
 
 % Timer Start
 c_start = tic();
@@ -207,25 +195,19 @@ x_options.MaxFunctionEvaluations = 1000;
 x_options.Display = 'off';
 
 % Optimization Results
-[x, ~, ~] = fminimax(x_f, x_0, [], [], [], [], x_lb, [], [], x_options);
+[x, ~, x_maxfval] = fminimax(x_f, x_0, [], [], [], [], x_lb, [], [], x_options);
 
 % Absorber Dampings
 ca = f_ca(x);
 
+% Minimized Maximum Transmissibility
+T_min = x_maxfval;
+
 % Damping Matrix
 C = f_C(n, m, na, ca);
 
-% Transmissibility Range
-T_range = f_T_range(n, w_e_range, M, C, K, k);
-
-% Critical Transmissibility Point
-[T_cr, j_cr] = max(T_range);
-
-% Critical Frequency
-w_e_cr = w_e_range(j_cr);
-
-% Plot
-plot_T_range(w_e_range, T_range, "Part C Transmissibility", n, u);
+% Plot Transmissibility Range
+plot_T_range(n, w_e_range, M, C, K, k, "Part C Transmissibility");
 
 % Elapsed Time
 c_elapsed = toc(c_start);
@@ -234,7 +216,7 @@ c_elapsed = toc(c_start);
 print("");
 print("Part C:");
 print("~~~~~~~");
-print("[-] Elapsed Time: %5.1f s", c_elapsed);
+print("[-] Elapsed Time: %5.2f s", c_elapsed);
 prvec("[-] Ia", Ia, "%7.3f");
 prvec("[-] na", na, "%7.0f");
 prmat("[-] M", M, "%9.3f");
@@ -243,8 +225,7 @@ prvec("[-] x_0", x_0, "%7.3f");
 prvec("[-] x", x, "%7.3f");
 prvec("[-] ca", ca, "%7.3f");
 prmat("[-] C", C, "%9.3f");
-print("[-] %6s = %10.3f", "T_cr", T_cr);
-print("[-] %6s = %10.3f rad/s", "w_e_cr", w_e_cr);
+print("[-] T_max = %.3f", T_min);
 
 % ------------------------------------------------------------------------------
 % PART D -----------------------------------------------------------------------
@@ -254,8 +235,8 @@ print("[-] %6s = %10.3f rad/s", "w_e_cr", w_e_cr);
 % damping coefficients and absorber inertias.
 % Select the one with the smallest transmissibility.
 % Note: using `m`, `n`, `w`, `u`, `I`, `k`, `w_e_range` from the previous part.
-% Note: using functions `f_T_min`, `f_M`, `f_C`, `f_K`, `f_T_range` that are
-% defined at the end.
+% Note: using functions `f_T_min`, `f_M`, `f_C`, `f_K` that are defined at the
+% end.
 
 % Timer Start
 c_start = tic();
@@ -299,17 +280,8 @@ if ~isinf(T_min)
     % Stiffness Matrix
     K = f_K(n, m, k);
 
-    % Transmissibility Range
-    T_range = f_T_range(n, w_e_range, M, C, K, k);
-
-    % Critical Transmissibility Point
-    [T_cr, j_cr] = max(T_range);
-
-    % Critical Frequency
-    w_e_cr = w_e_range(j_cr);
-
-    % Plot
-    plot_T_range(w_e_range, T_range, "Part D Transmissibility", n, u);
+    % Plot Transmissibility Range
+    plot_T_range(n, w_e_range, M, C, K, k, "Part D Transmissibility");
 end
 
 % Elapsed Time
@@ -319,7 +291,7 @@ c_elapsed = toc(c_start);
 print("");
 print("Part D:");
 print("~~~~~~~");
-print("[-] Elapsed Time: %5.1f s", c_elapsed);
+print("[-] Elapsed Time: %5.2f s", c_elapsed);
 prvec("[-] na", na, "%7.0f");
 prvec("[-] Ia", Ia, "%7.3f");
 prvec("[-] ca", ca, "%7.3f");
@@ -327,8 +299,7 @@ if ~isinf(T_min)
     prmat("[-] M", M, "%9.3f");
     prmat("[-] C", C, "%9.3f");
     prmat("[-] K", K, "%9.3f");
-    print("[-] %6s = %10.3f", "T_cr", T_cr);
-    print("[-] %6s = %10.3f rad/s", "w_e_cr", w_e_cr);
+    print("[-] T_max = %.3f", T_min);
 else
     print("[!] Could not found even a single finite solution!");
 end
@@ -388,7 +359,8 @@ end
 % For designing the absorbers in part D. Minimizes the maximum of the peaks
 % using `fminimax` and returns the optimum parameters. Only needs to know the
 % positions of the absorbers. The combination of all possible absorber positions
-% can be iterated over to get the best desing.
+% can be iterated over to get the best desing. The total absorber inertia is
+% equated to viscosity by giving a linear equality constraint to `fminimax`.
 function [Ia, ca, T_min] = f_T_min(n, m, w, na, u, I, k)
     % Stiffness Matrix
     K = f_K(n, m, k);
@@ -487,11 +459,11 @@ function T = f_T(n, w_e, M, C, K, k)
 end
 
 % ------------------------------------------------------------------------------
-% CONVENIENCE FUNCTIONS --------------------------------------------------------
+% OUTPUT FUNCTIONS -------------------------------------------------------------
 % ------------------------------------------------------------------------------
 
 % For plotting the transmissibility over a range of excitation frequencies.
-function plot_T_range(w_e_range, T_range, name, n, u)
+function plot_T_range(n, w_e_range, M, C, K, k, name)
     % Plot
     figure();
     set(gca, 'YScale', 'log');
@@ -500,32 +472,8 @@ function plot_T_range(w_e_range, T_range, name, n, u)
     grid('on');
     xlabel('\omega (rad/s)');
     ylabel('|\Theta_n/\Phi|');
-    plot(w_e_range, T_range, 'LineWidth', 2);
+    plot(w_e_range, f_T_range(n, w_e_range, M, C, K, k), 'LineWidth', 2);
     title(name);
-    saveas(gcf, sprintf("%s n=%.0f u=%.2f.jpeg", name, n, u), 'jpeg');
-end
-
-% For getting valid and checked user input.
-function x = ask(msg, x_min, x_max, integer)
-    while true
-        x = input(msg);
-        if isempty(x)
-            fprintf(2, "No input!\n");
-        elseif ischar(x) || isstring(x)
-            fprintf(2, "The input is a string!\n")
-        elseif ~isscalar(x)
-            fprintf(2, "The input is not a scalar!\n")
-        elseif x < x_min
-            fprintf(2, "The input is too small!\n");
-        elseif x > x_max
-            fprintf(2, "The input is too big!\n");
-        else
-            break;
-        end
-        if ~isempty(integer) && integer
-            x = round(x);
-        end
-    end
 end
 
 % For easier general printing. Puts new line at the start.
