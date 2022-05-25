@@ -36,6 +36,7 @@ print("[-] %1s = %4.2f %0s", "u", u, "");
 % ------------------------------------------------------------------------------
 
 % Find I and k.
+% Note: using `n`, `u` from the previous part.
 
 % Rotational Inertia of a Disk
 I = 100 / n;
@@ -56,6 +57,8 @@ print("[-] %1s = %5.1f %0s", "k", k, "");
 
 % Find M and K.
 % Use modal analysis to find the natural frequencies and mode shapes.
+% Note: using `n`, `I`, `k` from the previous part.
+% Note: using functions `f_M`, `f_K` that are defined at the end.
 
 % Timer Start
 c_start = tic();
@@ -116,6 +119,8 @@ end
 
 % Construct the range of excitation frequencies and find the transmissibilities
 % using the repectance matrix.
+% Note: using `w`, `n`, `M`, `K`, `k` from the previous part.
+% Note: using functions `f_T_range`, `f_C` that are defined at the end.
 
 % Timer Start
 c_start = tic();
@@ -152,6 +157,9 @@ print("[-] %6s = %10.3f rad/s", "w_e_cr", w_e_cr);
 
 % Optimize the maximum of the peaks in the transmissibility for the damping
 % coefficients of the absorbers which are connected to 1 and 5.
+% Note: using `u`, `n`, `I`, `k`, `w`, `w_e_range` from the previous part.
+% Note: using functions `f_M`, `f_K`, `f_T_peaks`, `f_C`, `f_T_range` that are
+% defined at the end.
 
 % Timer Start
 c_start = tic();
@@ -241,12 +249,12 @@ print("[-] %6s = %10.3f rad/s", "w_e_cr", w_e_cr);
 % Optimize all the possible combinations of the absorber positions over the
 % damping coefficients and absorber inertias.
 % Select the one with the smallest transmissibility.
+% Note: using `m`, `n`, `w`, `u`, `I`, `k`, `w_e_range` from the previous part.
+% Note: using functions `f_T_min`, `f_M`, `f_C`, `f_K`, `f_T_range` that are
+% defined at the end.
 
 % Timer Start
 c_start = tic();
-
-% Number of Absorbers
-m = 2;
 
 % Absorber Positions (Assumed to be unique for each absorber.)
 na = zeros(m, 1);
