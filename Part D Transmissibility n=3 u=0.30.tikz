@@ -5,8 +5,8 @@
 \begin{tikzpicture}
 
 \begin{axis}[%
-width=0.475\textwidth,
-height=0.5\textwidth,
+width=0.38\textwidth,
+height=0.4\textwidth,
 at={(0\textwidth,0\textwidth)},
 scale only axis,
 xmode=log,
