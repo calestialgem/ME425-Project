@@ -18,7 +18,7 @@ print("atalay gecgel sipahioglu");
 n = 4;
 
 % Total Houdaille Damper Viscosity (Min: 0.1, Max: 0.3)
-u = 0.2;
+u = 0.1;
 
 % Print
 print("");
