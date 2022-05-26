@@ -15,10 +15,10 @@ print("atalay gecgel sipahioglu");
 % Get the n and u from the user.
 
 % Number of Disks (Min: 2, Max: 5)
-n = 4;
+n = 5;
 
 % Total Houdaille Damper Viscosity (Min: 0.1, Max: 0.3)
-u = 0.1;
+u = 0.3;
 
 % Print
 print("");
