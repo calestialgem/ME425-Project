@@ -1,87 +1,27 @@
 % This file was created by matlab2tikz.
 %
-\definecolor{mycolor1}{rgb}{0.00000,0.44700,0.74100}%
+\definecolor{mycolor1}{rgb}{0.00000,0.44706,0.74118}%
+\definecolor{mycolor2}{rgb}{0.85098,0.32549,0.09804}%
+\definecolor{mycolor3}{rgb}{0.92941,0.69412,0.12549}%
 %
 \begin{tikzpicture}
 
 \begin{axis}[%
-width=0.356\textwidth,
-height=0.371\textwidth,
-at={(0\textwidth,0.529\textwidth)},
-scale only axis,
-xmin=1,
-xmax=3,
-ymin=-1,
-ymax=1,
-axis background/.style={fill=white},
-title style={font=\bfseries},
-title={$\omega{}_\text{1}\text{=0.668 rad/s}$},
-axis x line*=bottom,
-axis y line*=left,
-xmajorgrids,
-ymajorgrids,
-ylabel style={font=\small},
-xlabel style={font=\small}
-]
-\addplot [color=mycolor1, line width=2.0pt, mark=o, mark options={solid, mycolor1}, forget plot]
-  table[row sep=crcr]{%
-1	0.327985277605682\\
-2	0.591009048506104\\
-3	0.736976229099578\\
-};
-\addplot [color=black, dashed, line width=2.0pt, forget plot]
-  table[row sep=crcr]{%
-1	0\\
-2	0\\
-3	0\\
-};
-\end{axis}
-
-\begin{axis}[%
-width=0.356\textwidth,
-height=0.371\textwidth,
-at={(0.513\textwidth,0.529\textwidth)},
-scale only axis,
-xmin=1,
-xmax=3,
-ymin=-1,
-ymax=1,
-axis background/.style={fill=white},
-title style={font=\bfseries},
-title={$\omega{}_\text{2}\text{=1.870 rad/s}$},
-axis x line*=bottom,
-axis y line*=left,
-xmajorgrids,
-ymajorgrids,
-ylabel style={font=\small},
-xlabel style={font=\small}
-]
-\addplot [color=mycolor1, line width=2.0pt, mark=o, mark options={solid, mycolor1}, forget plot]
-  table[row sep=crcr]{%
-1	0.736976229099578\\
-2	0.327985277605682\\
-3	-0.591009048506104\\
-};
-\addplot [color=black, dashed, line width=2.0pt, forget plot]
-  table[row sep=crcr]{%
-1	0\\
-2	0\\
-3	0\\
-};
-\end{axis}
-
-\begin{axis}[%
-width=0.356\textwidth,
-height=0.371\textwidth,
+width=0.863\textwidth,
+height=0.5\textwidth,
 at={(0\textwidth,0\textwidth)},
 scale only axis,
-xmin=1,
-xmax=3,
-ymin=-1,
-ymax=1,
+xmin=0,
+xmax=4,
+xtick={1,2,3},
+xticklabels={{$\omega{}_\text{1}\text{=0.668}$},{$\omega{}_\text{2}\text{=1.870}$},{$\omega{}_\text{3}\text{=2.703}$}},
+xlabel style={font=\color{white!15!black}},
+xlabel={Natural Frequencies (rad/s)},
+ymin=0,
+ymax=4,
+ytick={1,2,3},
+yticklabels={{Disk 1},{Disk 2},{Disk 3}},
 axis background/.style={fill=white},
-title style={font=\bfseries},
-title={$\omega{}_\text{3}\text{=2.703 rad/s}$},
 axis x line*=bottom,
 axis y line*=left,
 xmajorgrids,
@@ -89,17 +29,41 @@ ymajorgrids,
 ylabel style={font=\small},
 xlabel style={font=\small}
 ]
+\addplot [color=mycolor1, dashed, line width=2.0pt, forget plot]
+  table[row sep=crcr]{%
+1	1\\
+1	2\\
+1	3\\
+};
 \addplot [color=mycolor1, line width=2.0pt, mark=o, mark options={solid, mycolor1}, forget plot]
   table[row sep=crcr]{%
-1	0.591009048506104\\
-2	-0.736976229099578\\
-3	0.327985277605682\\
+1.16399263880284	1\\
+1.29550452425305	2\\
+1.36848811454979	3\\
 };
-\addplot [color=black, dashed, line width=2.0pt, forget plot]
+\addplot [color=mycolor2, dashed, line width=2.0pt, forget plot]
   table[row sep=crcr]{%
-1	0\\
-2	0\\
-3	0\\
+2	1\\
+2	2\\
+2	3\\
+};
+\addplot [color=mycolor2, line width=2.0pt, mark=o, mark options={solid, mycolor2}, forget plot]
+  table[row sep=crcr]{%
+2.36848811454979	1\\
+2.16399263880284	2\\
+1.70449547574695	3\\
+};
+\addplot [color=mycolor3, dashed, line width=2.0pt, forget plot]
+  table[row sep=crcr]{%
+3	1\\
+3	2\\
+3	3\\
+};
+\addplot [color=mycolor3, line width=2.0pt, mark=o, mark options={solid, mycolor3}, forget plot]
+  table[row sep=crcr]{%
+3.29550452425305	1\\
+2.63151188545021	2\\
+3.16399263880284	3\\
 };
 \end{axis}
 \end{tikzpicture}%

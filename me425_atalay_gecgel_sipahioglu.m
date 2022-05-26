@@ -85,16 +85,25 @@ end
 
 % Plot
 figure();
-tiledlayout(n, 1);
-xlabel('n');
+hold('on');
+grid('on');
+colors = {'#0072BD', '#D95319', '#EDB120', '#7E2F8E', '#77AC30'};
+xlim([0, n + 1]);
+ylim([0, n + 1]);
+xticks(1:n);
+yticks(1:n);
+xlabels = cell(1, n);
+ylabels = cell(1, n);
 for j = 1:n
-    nexttile();
-    hold('on');
-    grid('on');
-    title(sprintf("\\omega_%.0f=%5.3f rad/s", j, w(j)));
-    ylim([-1 1]);
-    plot(1:n, P(:, j), '-o', 'LineWidth', 2);
-    plot(1:n, zeros(1, n), 'k--', 'LineWidth', 2);
+    xlabels{j} = sprintf("\\omega_%.0f=%.3f", j, w(j));
+    ylabels{j} = sprintf("Disk %.0f", j);
+end
+xticklabels(xlabels);
+yticklabels(ylabels);
+xlabel("Natural Frequencies (rad/s)");
+for j = 1:n
+    plot(j + zeros(1, n), 1:n, '--', 'Color', colors{j}, 'LineWidth', 2);
+    plot(j + P(:, j) / 2, 1:n, '-o', 'Color', colors{j}, 'LineWidth', 2);
 end
 
 % Elapsed Time
