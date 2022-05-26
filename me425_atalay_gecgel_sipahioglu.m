@@ -15,7 +15,7 @@ print("atalay gecgel sipahioglu");
 % Get the n and u from the user.
 
 % Number of Disks (Min: 2, Max: 5)
-n = 5;
+n = 4;
 
 % Total Houdaille Damper Viscosity (Min: 0.1, Max: 0.3)
 u = 0.2;
@@ -131,7 +131,7 @@ c_start = tic();
 w_e_range = max(w) * (10.^(-1:0.001:log10(1.5)));
 
 % Damping Matrix
-% This is just a zero matrix in this
+% This is just a zero matrix in this part.
 C = f_C(n, 0, [], []);
 
 % Plot Transmissibility Range
