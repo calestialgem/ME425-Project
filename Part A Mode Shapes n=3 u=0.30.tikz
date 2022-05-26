@@ -5,9 +5,9 @@
 \begin{tikzpicture}
 
 \begin{axis}[%
-width=0.158\textwidth,
-height=0.165\textwidth,
-at={(0\textwidth,0.235\textwidth)},
+width=0.356\textwidth,
+height=0.371\textwidth,
+at={(0\textwidth,0.529\textwidth)},
 scale only axis,
 xmin=1,
 xmax=3,
@@ -38,9 +38,9 @@ xlabel style={font=\small}
 \end{axis}
 
 \begin{axis}[%
-width=0.158\textwidth,
-height=0.165\textwidth,
-at={(0.228\textwidth,0.235\textwidth)},
+width=0.356\textwidth,
+height=0.371\textwidth,
+at={(0.513\textwidth,0.529\textwidth)},
 scale only axis,
 xmin=1,
 xmax=3,
@@ -71,8 +71,8 @@ xlabel style={font=\small}
 \end{axis}
 
 \begin{axis}[%
-width=0.158\textwidth,
-height=0.165\textwidth,
+width=0.356\textwidth,
+height=0.371\textwidth,
 at={(0\textwidth,0\textwidth)},
 scale only axis,
 xmin=1,

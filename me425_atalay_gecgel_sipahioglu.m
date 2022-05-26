@@ -93,7 +93,7 @@ for j = 1:n
     plot(1:n, P(:, j), '-o', 'LineWidth', 2);
     plot(1:n, zeros(1, n), 'k--', 'LineWidth', 2);
 end
-export_plot("Part A Mode Shapes", n, u);
+export_plot("Part A Mode Shapes", n, u, 0.9, 0.9);
 
 % Elapsed Time
 c_elapsed = toc(c_start);
@@ -475,7 +475,7 @@ function plot_T_range(n, u, w_e_range, M, C, K, k, name)
     ylabel('|\Theta_n/\Phi|');
     plot(w_e_range, f_T_range(n, w_e_range, M, C, K, k), 'LineWidth', 2);
     title(name);
-    export_plot(name, n, u);
+    export_plot(name, n, u, 0.9, 0.5);
 end
 
 % For easier general printing. Puts new line at the start.
@@ -503,10 +503,10 @@ function prvec(name, vector, element)
     fprintf("\n");
 end
 
-function export_plot(name, n, u)
+function export_plot(name, n, u, w, h)
     matlab2tikz(sprintf('%s n=%.0f u=%.2f.tikz', name, n, u), ...
-        'height', '0.4\textwidth', ...
-        'width', '0.4\textwidth', ...
+        'height', sprintf('%.2f\\textwidth', h), ...
+        'width', sprintf('%.2f\\textwidth', w), ...
         'extraAxisOptions', ...
         {'ylabel style={font=\small}', ...
         'xlabel style={font=\small}'}, ...

@@ -5,9 +5,9 @@
 \begin{tikzpicture}
 
 \begin{axis}[%
-width=0.158\textwidth,
-height=0.091\textwidth,
-at={(0\textwidth,0.309\textwidth)},
+width=0.355\textwidth,
+height=0.205\textwidth,
+at={(0\textwidth,0.695\textwidth)},
 scale only axis,
 xmin=1,
 xmax=5,
@@ -42,9 +42,9 @@ xlabel style={font=\small}
 \end{axis}
 
 \begin{axis}[%
-width=0.158\textwidth,
-height=0.091\textwidth,
-at={(0.227\textwidth,0.309\textwidth)},
+width=0.355\textwidth,
+height=0.205\textwidth,
+at={(0.512\textwidth,0.695\textwidth)},
 scale only axis,
 xmin=1,
 xmax=5,
@@ -79,9 +79,9 @@ xlabel style={font=\small}
 \end{axis}
 
 \begin{axis}[%
-width=0.158\textwidth,
-height=0.091\textwidth,
-at={(0\textwidth,0.155\textwidth)},
+width=0.355\textwidth,
+height=0.205\textwidth,
+at={(0\textwidth,0.348\textwidth)},
 scale only axis,
 xmin=1,
 xmax=5,
@@ -116,9 +116,9 @@ xlabel style={font=\small}
 \end{axis}
 
 \begin{axis}[%
-width=0.158\textwidth,
-height=0.091\textwidth,
-at={(0.227\textwidth,0.155\textwidth)},
+width=0.355\textwidth,
+height=0.205\textwidth,
+at={(0.512\textwidth,0.348\textwidth)},
 scale only axis,
 xmin=1,
 xmax=5,
@@ -153,8 +153,8 @@ xlabel style={font=\small}
 \end{axis}
 
 \begin{axis}[%
-width=0.158\textwidth,
-height=0.091\textwidth,
+width=0.355\textwidth,
+height=0.205\textwidth,
 at={(0\textwidth,0\textwidth)},
 scale only axis,
 xmin=1,
