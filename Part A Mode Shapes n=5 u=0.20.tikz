@@ -62,11 +62,11 @@ xlabel style={font=\small}
 ]
 \addplot [color=mycolor1, line width=2.0pt, mark=o, mark options={solid, mycolor1}, forget plot]
   table[row sep=crcr]{%
-1	-0.45573414065525\\
-2	-0.596884787666841\\
-3	-0.326018679609317\\
-4	0.169891124049181\\
-5	0.548528731980589\\
+1	0.45573414065525\\
+2	0.596884787666841\\
+3	0.326018679609317\\
+4	-0.169891124049181\\
+5	-0.548528731980589\\
 };
 \addplot [color=black, dashed, line width=2.0pt, forget plot]
   table[row sep=crcr]{%
@@ -173,11 +173,11 @@ xlabel style={font=\small}
 ]
 \addplot [color=mycolor1, line width=2.0pt, mark=o, mark options={solid, mycolor1}, forget plot]
   table[row sep=crcr]{%
-1	-0.326018679609317\\
-2	0.54852873198059\\
-3	-0.596884787666841\\
-4	0.45573414065525\\
-5	-0.169891124049181\\
+1	0.326018679609317\\
+2	-0.54852873198059\\
+3	0.596884787666841\\
+4	-0.45573414065525\\
+5	0.169891124049181\\
 };
 \addplot [color=black, dashed, line width=2.0pt, forget plot]
   table[row sep=crcr]{%

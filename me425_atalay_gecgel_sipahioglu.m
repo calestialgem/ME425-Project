@@ -15,10 +15,10 @@ print("atalay gecgel sipahioglu");
 % Get the n and u from the user.
 
 % Number of Disks (Min: 2, Max: 5)
-n = 3;
+n = 5;
 
 % Total Houdaille Damper Viscosity (Min: 0.1, Max: 0.3)
-u = 0.3;
+u = 0.2;
 
 % Print
 print("");
@@ -77,7 +77,10 @@ K_ = M_ * K * M_;
 % Natural Frequencies in rad/s
 w = zeros(n, 1);
 for j = 1:n
+    % Natural frequency is found by taking the square root of the eigenvalues.
     w(j) = L(j, j)^(1/2);
+    % Mode shapes are found by making the first element of the eigenvectors positive.
+    P(:, j) = P(1, j) / abs(P(1, j)) * P(:, j);
 end
 
 % Plot

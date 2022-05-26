@@ -25,9 +25,9 @@ xlabel style={font=\small}
 ]
 \addplot [color=mycolor1, line width=2.0pt, mark=o, mark options={solid, mycolor1}, forget plot]
   table[row sep=crcr]{%
-1	-0.327985277605682\\
-2	-0.591009048506104\\
-3	-0.736976229099578\\
+1	0.327985277605682\\
+2	0.591009048506104\\
+3	0.736976229099578\\
 };
 \addplot [color=black, dashed, line width=2.0pt, forget plot]
   table[row sep=crcr]{%
@@ -91,9 +91,9 @@ xlabel style={font=\small}
 ]
 \addplot [color=mycolor1, line width=2.0pt, mark=o, mark options={solid, mycolor1}, forget plot]
   table[row sep=crcr]{%
-1	-0.591009048506104\\
-2	0.736976229099578\\
-3	-0.327985277605682\\
+1	0.591009048506104\\
+2	-0.736976229099578\\
+3	0.327985277605682\\
 };
 \addplot [color=black, dashed, line width=2.0pt, forget plot]
   table[row sep=crcr]{%
