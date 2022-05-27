@@ -18,7 +18,7 @@ print("atalay gecgel sipahioglu");
 n = 4;
 
 % Total Houdaille Damper Viscosity (Min: 0.1, Max: 0.3)
-u = 0.2;
+u = 0.1;
 
 % Print
 print("");
@@ -105,6 +105,7 @@ for j = 1:n
     plot(j + zeros(1, n), 1:n, '--', 'Color', colors{j}, 'LineWidth', 2);
     plot(j + P(:, j) / 2, 1:n, '-o', 'Color', colors{j}, 'LineWidth', 2);
 end
+export_plot("Part A Mode Shapes", n, u, 0.9, 0.9);
 
 % Elapsed Time
 c_elapsed = toc(c_start);
@@ -143,7 +144,7 @@ w_e_range = max(w) * (10.^(-1:0.001:log10(1.5)));
 C = f_C(n, 0, [], []);
 
 % Plot Transmissibility Range
-plot_T_range(n, w_e_range, M, C, K, k, "Part B Transmissibility");
+plot_T_range(n, u, w_e_range, M, C, K, k, "Part B Transmissibility");
 
 % Elapsed Time
 c_elapsed = toc(c_start);
@@ -219,7 +220,7 @@ T_min = x_maxfval;
 C = f_C(n, m, na, ca);
 
 % Plot Transmissibility Range
-plot_T_range(n, w_e_range, M, C, K, k, "Part C Transmissibility");
+plot_T_range(n, u, w_e_range, M, C, K, k, "Part C Transmissibility");
 
 % Elapsed Time
 c_elapsed = toc(c_start);
@@ -293,7 +294,7 @@ if ~isinf(T_min)
     K = f_K(n, m, k);
 
     % Plot Transmissibility Range
-    plot_T_range(n, w_e_range, M, C, K, k, "Part D Transmissibility");
+    plot_T_range(n, u, w_e_range, M, C, K, k, "Part D Transmissibility");
 end
 
 % Elapsed Time
@@ -477,7 +478,7 @@ end
 % ------------------------------------------------------------------------------
 
 % For plotting the transmissibility over a range of excitation frequencies.
-function plot_T_range(n, w_e_range, M, C, K, k, name)
+function plot_T_range(n, u, w_e_range, M, C, K, k, name)
     % Plot
     figure();
     set(gca, 'YScale', 'log');
@@ -487,7 +488,7 @@ function plot_T_range(n, w_e_range, M, C, K, k, name)
     xlabel('\omega (rad/s)');
     ylabel('|\Theta_n/\Phi|');
     plot(w_e_range, f_T_range(n, w_e_range, M, C, K, k), 'LineWidth', 2);
-    title(name);
+    export_plot(name, n, u, 0.9, 0.5);
 end
 
 % For easier general printing. Puts new line at the start.
@@ -513,4 +514,14 @@ function prvec(name, vector, element)
         fprintf(element, vector(k));
     end
     fprintf("\n");
+end
+
+function export_plot(name, n, u, w, h)
+    matlab2tikz(sprintf('%s n=%.0f u=%.2f.tikz', name, n, u), ...
+        'height', sprintf('%.2f\\textwidth', h), ...
+        'width', sprintf('%.2f\\textwidth', w), ...
+        'extraAxisOptions', ...
+        {'ylabel style={font=\small}', ...
+        'xlabel style={font=\small}'}, ...
+        'showInfo', false);
 end
