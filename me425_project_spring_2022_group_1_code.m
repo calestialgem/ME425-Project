@@ -130,7 +130,7 @@ end
 % Construct the range of excitation frequencies and find the transmissibilities
 % using the repectance matrix.
 % Note: using `w`, `n`, `M`, `K`, `k` from the previous part.
-% Note: using functions `f_C`, `f_T_peaks` that are defined at the end.
+% Note: using function `f_C` that is defined at the end.
 
 % Timer Start
 c_start = tic();
@@ -153,7 +153,6 @@ print("");
 print("Part B:");
 print("~~~~~~~");
 print("[-] Elapsed Time: %5.2f s", c_elapsed);
-print("[-] T_max = %.3f", max(f_T_peaks(n, w, M, C, K, k)));
 
 % ------------------------------------------------------------------------------
 % PART C -----------------------------------------------------------------------
