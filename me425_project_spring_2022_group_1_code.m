@@ -42,8 +42,8 @@ k = 25 * n;
 
 % Print
 print("");
-print("Initial Caclculations:");
-print("~~~~~~~~~~~~~~~~~~~~~~");
+print("Initial Calculations:");
+print("~~~~~~~~~~~~~~~~~~~~~");
 print("[-] I = %5.1f", I);
 print("[-] k = %5.1f", k);
 
