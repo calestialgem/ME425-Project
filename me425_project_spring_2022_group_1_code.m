@@ -195,8 +195,8 @@ f_ca = @(x) [x(1); x(2)];
 x_0 = [0.5, 0.5];
 
 % Lower Bound
-% 10^-20 instead of 0, such that receptance matrices are not singular.
-x_lb = [1e-20, 1e-20];
+% 10^-10 instead of 0, such that receptance matrices are not singular.
+x_lb = [1e-10, 1e-10];
 
 % Optimized Function
 x_f = @(x) f_T_peaks(n, w, M, f_C(n, m, na, f_ca(x)), K, k);
@@ -387,8 +387,8 @@ function [Ia, ca, T_min] = f_T_min(n, m, w, na, u, I, k)
     x_0 = [u / 2, u / 2, 0.5, 0.5];
 
     % Lower Bound
-    % 10^-20 instead of 0, such that receptance matrices are not singular.
-    x_lb = [1e-20, 1e-20, 1e-20, 1e-20];
+    % 10^-10 instead of 0, such that receptance matrices are not singular.
+    x_lb = [1e-10, 1e-10, 1e-10, 1e-10];
 
     % Optimized Function
     x_f = @(x) f_T_peaks(n, w, f_M(n, m, I, f_Ia(x)), f_C(n, m, na, f_ca(x)), K, k);
