@@ -15,10 +15,10 @@ print("atalay gecgel sipahioglu");
 % Get the n and u from the user.
 
 % Number of Disks (Min: 2, Max: 5)
-n = 5;
+n = 4;
 
 % Total Houdaille Damper Viscosity (Min: 0.1, Max: 0.3)
-u = 0.3;
+u = 0.2;
 
 % Print
 print("");
@@ -195,7 +195,8 @@ f_ca = @(x) [x(1); x(2)];
 x_0 = [0.5, 0.5];
 
 % Lower Bound
-x_lb = [0, 0];
+% 10^-20 instead of 0, such that receptance matrices are not singular.
+x_lb = [1e-20, 1e-20];
 
 % Optimized Function
 x_f = @(x) f_T_peaks(n, w, M, f_C(n, m, na, f_ca(x)), K, k);
@@ -386,7 +387,8 @@ function [Ia, ca, T_min] = f_T_min(n, m, w, na, u, I, k)
     x_0 = [u / 2, u / 2, 0.5, 0.5];
 
     % Lower Bound
-    x_lb = [0, 0, 0, 0];
+    % 10^-20 instead of 0, such that receptance matrices are not singular.
+    x_lb = [1e-20, 1e-20, 1e-20, 1e-20];
 
     % Optimized Function
     x_f = @(x) f_T_peaks(n, w, f_M(n, m, I, f_Ia(x)), f_C(n, m, na, f_ca(x)), K, k);
@@ -427,6 +429,7 @@ function T_peaks = f_T_peaks(n, w, M, C, K, k)
         % Optimization Parameter Vector
         % [w_e]
         % Lower Bound
+        % The damped frequencies should be just a little smaller.
         x_lb = w(j) * 0.95;
 
         % Upper Bound
