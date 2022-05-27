@@ -267,7 +267,7 @@ T_min = Inf;
 
 % For all possible combinations...
 na_combinations = nchoosek(1:n, m);
-for j = size(na_combinations, 1)
+for j = 1:size(na_combinations, 1)
     na_j = na_combinations(j, :);
 
     % Optimize
